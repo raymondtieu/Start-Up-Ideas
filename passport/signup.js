@@ -1,5 +1,6 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var models = require('../models/schema');
+var validator = require('email-validator');
 
 module.exports = function(passport){
 
@@ -22,15 +23,22 @@ module.exports = function(passport){
                         console.log('User already exists: ' + username);
                         return done(null, false, req.flash('message','User already exists'));
                     } else {
+
+                        // check for matching passwords
                         if (password != req.param('ps-again')) {
                             return done(null, false, req.flash('message', 'Passwords do not match'));
                         }
+
+                        // check for valid email
+                        var email = req.param('email');
+                        if (!(validator.validate(email)))
+                            return done(null, false, req.flash('message', 'Invalid email'));
 
                         // if there is no user with that username, create one
                         var newUser = new models.User();
 
                         newUser.username = username;
-                        newUser.email = req.param('email');
+                        newUser.email = email
                         newUser.password = password;
 
 
