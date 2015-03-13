@@ -40,7 +40,7 @@ module.exports = function(passport) {
         failureFlash : true  
     }));
 
-    /* TODO */
+
     /* Handle logout */
     router.get('/signout', function(req, res) {
         req.logout();
