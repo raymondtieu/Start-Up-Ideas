@@ -1,6 +1,6 @@
 var login = require('./login');
 var signup = require('./signup');
-var User = require('../models/user');
+var models = require('../models/schema');
 
 module.exports = function(passport) {
 
@@ -9,7 +9,7 @@ module.exports = function(passport) {
     });
 
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        models.User.findById(id, function(err, user) {
             done(err, user);
         });
     });

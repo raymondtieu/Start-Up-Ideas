@@ -1,5 +1,5 @@
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/user');
+var models = require('../models/schema');
 
 module.exports = function(passport) {
     
@@ -9,7 +9,7 @@ module.exports = function(passport) {
 
         function(req, username, password, done) {
             // Check if user exists
-            User.findOne({'username': username},
+            models.User.findOne({'username': username},
                 function(err, user) {
                     if (err)
                         return done(err);

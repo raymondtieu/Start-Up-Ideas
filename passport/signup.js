@@ -1,5 +1,5 @@
 var LocalStrategy   = require('passport-local').Strategy;
-var User = require('../models/user');
+var models = require('../models/schema');
 
 module.exports = function(passport){
 
@@ -10,7 +10,7 @@ module.exports = function(passport){
 
             findOrCreateUser = function() {
                 // find a user in db with username
-                User.findOne({ 'username' :  username }, function(err, user) {
+                models.User.findOne({ 'username' :  username }, function(err, user) {
                     // In case of any error, return using the done method
                     if (err){
                         console.log('Error in SignUp: '+err);
@@ -19,14 +19,21 @@ module.exports = function(passport){
 
                     // user already exists
                     if (user) {
-                        console.log('User already exists with username: '+username);
-                        return done(null, false, req.flash('message','User Already Exists'));
+                        console.log('User already exists: ' + username);
+                        return done(null, false, req.flash('message','User already exists'));
                     } else {
+                        if (password != req.param('ps-again')) {
+                            return done(null, false, req.flash('message', 'Passwords do not match'));
+                        }
+
                         // if there is no user with that username, create one
-                        var newUser = new User();
+                        var newUser = new models.User();
 
                         newUser.username = username;
+                        newUser.email = req.param('email');
                         newUser.password = password;
+
+
 
                         // save the user
                         newUser.save(function(err) {
