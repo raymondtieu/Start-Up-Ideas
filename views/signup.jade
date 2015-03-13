@@ -1,9 +1,9 @@
 extends layout
 
 block content
-    h1 Login
+    h1 Sign Up
 
-    form(action="/login", method="POST")
+    form(action="/signup", method="POST")
         div
             p Username
             input(type="text" name="username" placeholder="Username", required, autofocus)
@@ -13,8 +13,7 @@ block content
         div
             input(type="submit" value="Submit")
 
-        div
-            a(href='/signup', class='text-center new-account') Create an account
 
         if message
             #{message}
+

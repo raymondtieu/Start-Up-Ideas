@@ -1,3 +1,4 @@
+// index.js
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,15 +6,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// database imports
-var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/start-up-ideas');
+// database middlewares
+var mongoose = require('mongoose');
+var dbConfig = require('./db');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// connect to db
+mongoose.connect(dbConfig.url);
 
 var app = express();
+
+
+/* ExpressJS */
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,14 +30,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Make the db accessible to the router
-app.use(function(req, res, next) {
-  req.db = db;
-  next();
-});
+// Configure Passport
+var passport = require('passport');
+var expressSession = require('express-session');
 
+app.use(expressSession({secret: 'mySecretKey'}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Use flash to display messages to store messages in session
+var flash = require('connect-flash');
+app.use(flash());
+
+// Initialize passport
+var initPassport = require('./passport/init');
+initPassport(passport);
+
+var routes = require('./routes/index')(passport);
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

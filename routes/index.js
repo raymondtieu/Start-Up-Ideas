@@ -1,52 +1,51 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
-router.get('/userlist', function(req, res) {
-    var db = req.db;
-    var collection = db.get('usercollection');
-    collection.find({}, {}, function(e, docs) {
-        res.render('userlist', {
-            "userlist": docs
-        });
+/* If the user is not authenticated, redirect to login page */
+var isAuthenticated = function(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+
+    res.redirect('/');
+}
+
+module.exports = function(passport) {
+    /* GET login page */
+    router.get('/', function(req, res) {
+        res.render('index', { message: req.flash('message') });
     });
-});
 
-router.get('/register', function(req, res) {
-    res.render('register', {title: 'Register New User'});
-});
+    /* Handle login POST */
+    router.post('/login', passport.authenticate('login', {
+        successRedirect: '/home',
+        failureRedirect: '/',
+        failureFlash : true  
+    }));
 
-/* POST to register a new user */
-router.post('/adduser', function(req, res) {
-    var db = req.db;
-
-    // get form values
-    var userName = req.body.username;
-    var email = req.body.email;
-
-    // set collection
-    var collection = db.get('usercollection');
-
-    // submit to db
-    collection.insert({
-        "name": userName,
-        "email": email
-    }, function(err, doc) {
-        if (err) {
-            res.send("Error: Could not register new user");
-        } else {
-
-            // redirect to userlist page
-            res.location("userlist");
-
-            // forward to success page
-            res.redirect("userlist");
-        }
+    /* GET home page */
+    router.get('/home', isAuthenticated, function(req, res){
+        res.render('home', { user: req.user });
     });
-});
 
-module.exports = router;
+    /* GET registration page */
+    router.get('/signup', function(req, res){
+        res.render('signup',{message: req.flash('message')});
+    });
+
+    /* Handle registration POST */
+    router.post('/signup', passport.authenticate('signup', {
+        successRedirect: '/home',
+        failureRedirect: '/signup',
+        failureFlash : true  
+    }));
+
+    /* TODO */
+    /* Handle logout */
+    router.get('/signout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
+    return router;
+}
