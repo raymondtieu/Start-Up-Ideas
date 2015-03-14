@@ -11,10 +11,10 @@ module.exports = function(passport){
 
             findOrCreateUser = function() {
                 // find a user in db with username
-                models.User.findOne({ 'username' :  username }, function(err, user) {
+                models.User.findOne({'username': username}, function(err, user) {
                     // In case of any error, return using the done method
                     if (err){
-                        console.log('Error in SignUp: '+err);
+                        console.log('Error in SignUp: ' + err);
                         return done(err);
                     }
 
@@ -25,12 +25,12 @@ module.exports = function(passport){
                     } else {
 
                         // check for matching passwords
-                        if (password != req.param('ps-again')) {
+                        if (password != req.body.psagain) {
                             return done(null, false, req.flash('message', 'Passwords do not match'));
                         }
 
                         // check for valid email
-                        var email = req.param('email');
+                        var email = req.body.email;
                         if (!(validator.validate(email)))
                             return done(null, false, req.flash('message', 'Invalid email'));
 
@@ -38,10 +38,8 @@ module.exports = function(passport){
                         var newUser = new models.User();
 
                         newUser.username = username;
-                        newUser.email = email
+                        newUser.email = email;
                         newUser.password = password;
-
-
 
                         // save the user
                         newUser.save(function(err) {

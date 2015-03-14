@@ -1,0 +1,22 @@
+extends layout
+
+block content
+    h1 New Start-up idea
+
+    form(action="/new-idea", method="POST")
+        div
+            p Title
+            input(type="text" name="title" placeholder="Title", required, autofocus)
+        div
+            p Description
+            input(type="text" name="description" placeholder="Description", required)
+        div
+            p Industry
+            input(type="text" name="industry" placeholder="Industry", required)
+        div
+            input(type="submit" value="Submit")
+
+        #message
+        if message
+            p #{message}
+

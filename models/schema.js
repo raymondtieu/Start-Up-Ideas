@@ -19,7 +19,7 @@ mongoose.model('User', UserSchema);
 var User = mongoose.model('User');
 
 mongoose.model('Idea', IdeaSchema);
-var Idea = mongoose.Idea;
+var Idea = mongoose.model('Idea');
 
 
 module.exports = {
