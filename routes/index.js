@@ -54,7 +54,7 @@ module.exports = function(passport) {
     router.get('/new-idea', isAuthenticated, function(req, res) {
         var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
 
-        res.render('new-idea', {industries: ind});
+        res.render('new-idea', {action: '/new-idea', industries: ind});
     });
 
     /* Handle idea POST */
@@ -63,8 +63,8 @@ module.exports = function(passport) {
             if (result.success) {
                 res.redirect('/home');
             } else {
-                console.log(result.message);
-                req.flash('message', result.message);
+                console.log(result.errmsg);
+                req.flash('message', result.errmsg);
                 res.render('new-idea', {
                     message: req.flash('message')
                 });
@@ -74,16 +74,33 @@ module.exports = function(passport) {
 
     /* GET a form to update an existing idea */
     router.get('/idea=:id/update', isAuthenticated, function(req, res) {
-        startup.getIdea(req.params.id, function(result) {
+        var id = req.params.id;
+        startup.getIdea(id, function(result) {
             var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
             var idea = result.idea;
 
-            console.log(idea.title+','+ idea.description+','+ idea.industry)
             res.render('new-idea', {title: idea.title, 
                 description: idea.description, industry: idea.industry,
+                action: '/idea='+id+'/update',
                 industries: ind});
         });
         
+    });
+
+    /* Handle update idea POST */
+    router.post('/idea=:id/update', function(req,res) {
+        var id = req.params.id;
+        console.log('please');
+        startup.updateIdea(id, req.body, function(result) {
+            if (result.success) {
+                res.redirect('/idea=' + id);
+            } else {
+                console.log(result.errmsg);
+                req.flash('message', result.errmsg);
+                res.render('/idea=' + id + '/update', 
+                    {message: req.flash('message')});
+            }
+        });
     });
 
     /* GET page with list of all ideas */

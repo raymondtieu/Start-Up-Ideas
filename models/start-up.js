@@ -8,8 +8,6 @@ module.exports = {
         var description = req.body.description;
         var industry = req.body.industry;
 
-        console.log("New idea is " + title + ", " + description + ", " + industry);
-
         models.Idea.findOne({'title': title}, function(err, idea) {
             if (err) {
                 console.log("Error in postIdea: " + err);
@@ -21,8 +19,8 @@ module.exports = {
             if (idea) {
                 console.log("Idea already exists with title: " + title);
                 
-                callback({success: false, errmsg: "Idea already exists", 
-                    message: "Another idea exists with the same title"});
+                callback({success: false, 
+                    errmsg: "Another idea already exists with the same title"});
 
                 return;
             } else {
@@ -38,7 +36,7 @@ module.exports = {
                         console.log('Error in saving new idea: ' + err);  
                         throw err;  
                     }
-                    console.log('New Idea posted succesfulyl');    
+                    console.log('New idea posted succesfully');    
                     
                     callback({success: true, idea: newIdea});
                 });
@@ -84,6 +82,53 @@ module.exports = {
             }
 
             callback({success: true, idea: idea});
+        });
+    },
+
+    updateIdea: function(id, body, callback) {
+        models.Idea.findById(id, function(err, idea) {
+            if (err) {
+                console.log("Error in updateIdea: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            var title = body.title;
+            var description = body.description;
+            var industry = body.industry;
+
+            console.log("Update idea is " + title + ", " + description + ", " + industry);
+
+            models.Idea.findOne({'title': title}, function(err, eidea) {
+                if (err) {
+                    console.log("Error in updateIdea: " + err);
+                    callback({success: false, errmsg: err});
+                    return;
+                }
+
+                if (eidea) {
+                    console.log("Idea already exists with title: " + title);
+                
+                    callback({success: false, 
+                        errmsg: "Another idea already exists with the same title"});
+
+                    return;
+                }
+            
+                idea.title = title;
+                idea.description = description;
+                idea.industry = industry;
+
+                idea.save(function(err) {
+                    if (err){
+                        console.log('Error in saving new idea: ' + err);  
+                        throw err;  
+                    }
+                    console.log('Idea updated succesfully');    
+                    
+                    callback({success: true});
+                });
+            });
         });
     }
 }
