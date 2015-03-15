@@ -140,7 +140,86 @@ module.exports = {
                 return;
             }
 
+            // delete all likes/dislikes
+
             callback({success: true});
+        });
+    },
+
+    getPreference: function(id, callback) {
+        models.Idea.findById(id, function(err, idea) {
+            if (err) {
+                console.log("Error in getPreference: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            models.Preference.aggregate([
+                {$match: {title: idea.title}},
+                {$group: {
+                    _id: '$title',
+                    sumPref: {$sum: '$preference'}
+                }}
+            ], function(err, result) {
+                if (err) {
+                    console.log("Error in getPreference: " + err);
+                    callback({success: false, errmsg: err});
+                    return;
+                }
+
+                var preference = 0;
+                if (result[0])
+                    preference = result[0].sumPref;
+
+                callback({success: true, preference: preference});
+            });  
+        });
+    },
+
+    addPreference: function(id, username, p, callback) {
+        models.Idea.findById(id, function(err, idea) {
+            if (err) {
+                console.log("Error in addPreference: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            if (idea) {
+                models.Preference.findOne({title: idea.title, username: username})
+                .exec(function(err, preference) {
+                    if (err) {
+                        console.log("Error in addPreference: " + err);
+                        callback({success: false, errmsg: err});
+                        return;
+                    }
+
+                    if (preference) {
+                        console.log("Already gave a preference for this idea");
+                        callback({success: false, 
+                            errmsg: "User already gave a preference for this idea"});
+
+                        return;
+                    } else {
+                        var newPref = new models.Preference();
+
+                        newPref.username = username;
+                        newPref.title = idea.title;
+                        newPref.preference = p;
+
+                        newPref.save(function(err) {
+                            if (err){
+                                console.log('Error in saving new preference: ' + err);  
+                                throw err;  
+                            }
+                            console.log('New preference added succesfully');    
+                            
+                            callback({success: true, idea: newPref});
+                        });
+                    }
+                });
+            } else {
+                callback({success: false, errmsg: "Idea does not exist"});
+            }
         });
     }
 }

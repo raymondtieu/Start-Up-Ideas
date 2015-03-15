@@ -73,8 +73,17 @@ module.exports = function(passport) {
 
     /* GET the page for an idea */
     router.get('/idea=:id', isAuthenticated, function(req, res) {
-        startup.getIdea(req.params.id, function(result) {
-            res.render('idea', {user: req.user, idea: result.idea});
+        var id = req.params.id;
+        startup.getIdea(id, function(idea_result) {
+            if (idea_result.success) {
+                startup.getPreference(id, function(pref_result){
+                    if (pref_result.success) {
+                        res.render('idea', {user: req.user, 
+                            idea: idea_result.idea,
+                            preference: pref_result.preference});
+                    }
+                });
+            }            
         });
     });
 
@@ -116,11 +125,37 @@ module.exports = function(passport) {
     });
 
     /* Handle an idea DELETE */
-    router.get('/idea=:id/delete', function(req, res) {
+    router.get('/idea=:id/delete', isAuthenticated, function(req, res) {
         var id = req.params.id;
         startup.deleteIdea(id, function(result) {
             if (result.success) {
                 res.redirect('/home');
+            }
+        });
+    });
+
+    /* GET idea like */
+    router.get('/idea=:id/like', isAuthenticated, function(req, res) {
+        var id = req.params.id;
+        startup.addPreference(id, req.user.username, 1, function(result) {
+            if (result.success) {
+                res.redirect('/idea=' + id);
+            } else {
+                req.flash('idea-like-err', result.errmsg);
+                res.redirect('/idea=' + id);
+            }
+        });
+    });
+
+    /* GET idea dislike */
+    router.get('/idea=:id/dislike', isAuthenticated, function(req, res) {
+        var id = req.params.id;
+        startup.addPreference(id, req.user.username, -1, function(result) {
+            if (result.success) {
+                res.redirect('/idea=' + id);
+            } else {
+                req.flash('idea-like-err', result.errmsg);
+                res.redirect('/idea=' + id);
             }
         });
     });
