@@ -28,7 +28,6 @@ module.exports = function(passport) {
     router.get('/home', isAuthenticated, function(req, res){
         startup.getIdeasByUser(req.user.username, function(result) {
             ideas = result.ideas;
-            console.log(ideas);
             res.render('home', {user: req.user, ideas: ideas});
         });
     });
