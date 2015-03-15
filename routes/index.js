@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var startup = require('./start-up');
+var startup = require('../models/start-up');
 
 /* If the user is not authenticated, redirect to login page */
 var isAuthenticated = function(req, res, next) {
