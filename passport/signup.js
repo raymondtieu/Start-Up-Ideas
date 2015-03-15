@@ -7,21 +7,21 @@ module.exports = function(passport){
     passport.use('signup', new LocalStrategy({
             passReqToCallback : true
         },
-        function(req, username, password, done) {
+        function(req, username, password, callback) {
 
             findOrCreateUser = function() {
                 // find a user in db with username
                 models.User.findOne({'username': username.trim()}, function(err, user) {
-                    // In case of any error, return using the done method
+                    // In case of any error, return using the callback
                     if (err){
                         console.log('Error in SignUp: ' + err);
-                        return done(err);
+                        return callback(err);
                     }
 
                     // user already exists
                     if (user) {
                         console.log('User already exists: ' + username);
-                        return done(null, false, req.flash('message','User already exists'));
+                        return callback(null, false, req.flash('message','User already exists'));
                     } else {
                         // regex for a valid username
                         // accepts only 8-16 alphanumeric characters
@@ -29,20 +29,20 @@ module.exports = function(passport){
 
                         // check for a valid username
                         if (!(username.match(usernameRegex))) {
-                            return done(null, false, 
+                            return callback(null, false, 
                                 req.flash('message', 
                                     'Invalid username'));
                         }
 
                         // check for matching passwords
                         if (password != req.body.psagain) {
-                            return done(null, false, req.flash('message', 'Passwords do not match'));
+                            return callback(null, false, req.flash('message', 'Passwords do not match'));
                         }
 
                         // check for valid email
                         var email = req.body.email;
                         if (!(validator.validate(email)))
-                            return done(null, false, req.flash('message', 'Invalid email'));
+                            return callback(null, false, req.flash('message', 'Invalid email'));
 
                         // if there is no user with that username, create one
                         var newUser = new models.User();
@@ -58,7 +58,7 @@ module.exports = function(passport){
                                 throw err;  
                             }
                             console.log('User Registration succesful');    
-                            return done(null, newUser);
+                            return callback(null, newUser);
                         });
                     }
                 });
