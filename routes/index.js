@@ -24,14 +24,6 @@ module.exports = function(passport) {
         failureFlash : true  
     }));
 
-    /* GET home page */
-    router.get('/home', isAuthenticated, function(req, res){
-        startup.getIdeasByUser(req.user.username, function(result) {
-            ideas = result.ideas;
-            res.render('home', {user: req.user, ideas: ideas});
-        });
-    });
-
     /* GET registration page */
     router.get('/signup', function(req, res){
         res.render('signup',{message: req.flash('message')});
@@ -50,6 +42,18 @@ module.exports = function(passport) {
         res.redirect('/');
     });
 
+    /* GET home page */
+    router.get('/home', isAuthenticated, function(req, res) {
+        res.render('home', {user: req.user});
+    });
+
+    /* GET all ideas by current user */
+    router.get('/my-ideas', isAuthenticated, function(req, res) {
+        startup.getIdeasByUser(req.user.username, function(result) {
+            res.send(result);
+        })
+    });
+
     /*  GET new start-up idea page */
     router.get('/new-idea', isAuthenticated, function(req, res) {
         var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
@@ -65,9 +69,9 @@ module.exports = function(passport) {
         industry = req.query.industry;
 
         startup.postIdea(req.user.username, title, description, industry, 
-        function(result) {
-            res.send(result);
-        });
+            function(result) {
+                res.send(result);
+            });
     });
 
     /* GET the page for an idea */

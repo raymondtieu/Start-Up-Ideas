@@ -6,37 +6,32 @@ block content
         li Email: #{user.email}
         li Password: #{user.password}
 
-    h4 My Ideas
-    ul
-        each idea in ideas
+    div(ng-controller="HomeCtrl")        
+        h4 My Ideas
+        ul(ng-repeat="idea in ideas")
             li 
-                a(href='/idea=#{idea._id}') #{idea.title}, #{idea.description}, #{idea.industry}
-        
-    <!-- A dialog for a new idea form -->
-    div(ng-controller="NewIdeaCtrl")
+                a(href='/idea={{ idea._id }}') {{ idea.title }}, {{ idea.description }}, {{ idea.industry }}
+
+        <!-- A dialog for a new idea form -->
         script(type="text/ng-template" id="newIdeaModal.jade")
             div.modal-header
                 h3 Propose New Idea
-            form(ng-submit="newIdea()")
+           
+            div.modal-body
+                label Title
+                input(type="text", placeholder="Title", required, autofocus, ng-model="title")
+                br
+                p Description   
+                textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
+                br
+                label Industry
+                select(ng-model="industry" ng-options="i for i in industries")
 
-                div.modal-body
-                    label Title
-                    input(type="text", placeholder="Title", required, autofocus, ng-model="title")
-                    br
-                    p Description   
-                    textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
-                    br
-                    label Industry
-                    select(ng-model="industry")
-                        option(value="Health") Health
-                        option(value="Technology") Technology
+            div.modal-footer
+                button.btn.btn-warning(ng-click="cancel()") Cancel
+                button.btn.btn-primary(ng-click="submit()") Submit
 
-                div.modal-footer
-                    button.btn.btn-warning(ng-click="cancel()") Cancel
-                    input.btn.btn-primary(type="submit" value="Submit")
-
-                if err
-                    p {{ errmsg }}
+            p {{ errmsg }}
 
         button.btn.btn-primary(ng-click="open()") Propose a new idea
 
