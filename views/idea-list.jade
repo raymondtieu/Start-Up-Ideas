@@ -4,7 +4,8 @@ block content
     h4 All Ideas
     ul
         each idea in ideas
-            li #{idea.title}, #{idea.description}, #{idea.industry}
+            li 
+                a(href='/idea=#{idea._id}') #{idea.title}, #{idea.description}, #{idea.industry}
             
     p
         a(href='/new-idea') Propose a new idea

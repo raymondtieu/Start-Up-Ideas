@@ -73,8 +73,14 @@ module.exports = function(passport) {
     /* GET page with list of all ideas */
     router.get('/all', isAuthenticated, function(req, res) {
         startup.getAllIdeas(function(result) {
-            ideas = result.ideas;
-            res.render('idea-list', {ideas: ideas});
+            res.render('idea-list', {ideas: result.ideas});
+        });
+    });
+
+    /* GET the page for an idea */
+    router.get('/idea=:id', isAuthenticated, function(req, res) {
+        startup.getIdea(req.params.id, function(result) {
+            res.render('idea', {idea: result.idea});
         });
     });
 

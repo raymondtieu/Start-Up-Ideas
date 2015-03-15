@@ -1,6 +1,8 @@
 var models = require('../models/schema');
 
 module.exports = {
+
+    /* Save a new idea to the database */
     postIdea : function(req, callback) {
         var title = req.body.title;
         var description = req.body.description;
@@ -45,6 +47,7 @@ module.exports = {
         });
     },
 
+    /* Return all ideas posted by the user given a username */
     getIdeasByUser : function(username, callback) {
         models.Idea.find({poster: username}, function(err, ideas) {
             if (err) {
@@ -57,15 +60,35 @@ module.exports = {
         });
     },
 
+    /* Return all posted ideas */
     getAllIdeas : function(callback) {
+        // sort ideas by their name
         models.Idea.find({}).sort({title: 'asc'}).exec(function(err, ideas) {
             if (err) {
-                console.log("Error in getIdeasByUser: " + err);
+                console.log("Error in getAllIdeas: " + err);
                 callback({success: false, errmsg: err});
                 return;
             }
 
             callback({success: true, ideas: ideas});
         });
+    },
+
+    /* Return an idea given an id */
+    getIdea : function(id, callback) {
+        models.Idea.findOne({'_id': id}, function(err, idea) {
+            if (err) {
+                console.log("Error in getIdea: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            callback({success: true, idea: idea});
+        });
     }
 }
+
+
+
+
+
