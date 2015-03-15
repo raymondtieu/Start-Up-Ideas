@@ -11,7 +11,7 @@ module.exports = function(passport){
 
             findOrCreateUser = function() {
                 // find a user in db with username
-                models.User.findOne({'username': username}, function(err, user) {
+                models.User.findOne({'username': username.trim()}, function(err, user) {
                     // In case of any error, return using the done method
                     if (err){
                         console.log('Error in SignUp: ' + err);
@@ -23,6 +23,16 @@ module.exports = function(passport){
                         console.log('User already exists: ' + username);
                         return done(null, false, req.flash('message','User already exists'));
                     } else {
+                        // regex for a valid username
+                        // accepts only 8-16 alphanumeric characters
+                        usernameRegex = /^[a-zA-Z0-9]{7,16}$/;
+
+                        // check for a valid username
+                        if (!(username.match(usernameRegex))) {
+                            return done(null, false, 
+                                req.flash('message', 
+                                    'Invalid username'));
+                        }
 
                         // check for matching passwords
                         if (password != req.body.psagain) {
