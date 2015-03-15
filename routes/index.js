@@ -52,7 +52,9 @@ module.exports = function(passport) {
 
     /*  GET new start-up idea page */
     router.get('/new-idea', isAuthenticated, function(req, res) {
-        res.render('new-idea');
+        var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
+
+        res.render('new-idea', {industries: ind});
     });
 
     /* Handle idea POST */
@@ -68,6 +70,20 @@ module.exports = function(passport) {
                 });
             }
         });
+    });
+
+    /* GET a form to update an existing idea */
+    router.get('/idea=:id/update', isAuthenticated, function(req, res) {
+        startup.getIdea(req.params.id, function(result) {
+            var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
+            var idea = result.idea;
+
+            console.log(idea.title+','+ idea.description+','+ idea.industry)
+            res.render('new-idea', {title: idea.title, 
+                description: idea.description, industry: idea.industry,
+                industries: ind});
+        });
+        
     });
 
     /* GET page with list of all ideas */

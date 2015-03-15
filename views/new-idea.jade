@@ -6,18 +6,16 @@ block content
     form(action="/new-idea", method="POST" id="idea")
         div
             p Title
-            input(type="text" name="title" placeholder="Title", required, autofocus)
+            input(type="text" name="title" placeholder="Title", required, autofocus, value=title)
         div
             p Description
-            input(type="text" name="description" placeholder="Description", required)
+            input(type="text" name="description" placeholder="Description", required, value=description)
         div
             p Industry
-            select(name="industry")
-                option(value="Health") Health
-                option(value="Technology") Technology
-                option(value="Education") Education
-                option(value="Finance") Finance
-                option(value="Travel") Travel
+            select
+                each i in industries
+                    option(value="#{i}" selected=i==industry) #{i}
+
         div
             input(type="submit" value="Submit")
 

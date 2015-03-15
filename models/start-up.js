@@ -76,7 +76,7 @@ module.exports = {
 
     /* Return an idea given an id */
     getIdea : function(id, callback) {
-        models.Idea.findOne({'_id': id}, function(err, idea) {
+        models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in getIdea: " + err);
                 callback({success: false, errmsg: err});
