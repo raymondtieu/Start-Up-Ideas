@@ -1,25 +1,21 @@
-extends layout
+div.modal-header
+    h3 Propose New Idea
 
-block content
-    h1 New Start-up idea
-
-    form(action=action, method="POST" id="idea")
-        div
-            p Title
-            input(type="text" name="title" placeholder="Title", required, autofocus, value=title)
-        div
+    form(ng-submit="newIdea()")
+        div.modal-body
+            label Title
+            input(type="text" name="title" placeholder="Title", required, value=title)
+            br
             p Description
             textarea(cols="40" rows="5" name="description" placeholder="Description", required) #{description}
-        div
-            p Industry
+            br
+            label Industry
             select(name="industry")
-                each i in industries
-                    option(value="#{i}" selected=i==industry) #{i}
+                option(value="Health") Health
+                option(value="Technology") Technology
+        div.modal-footer
+            button.btn.btn-warning(ng-click="cancel()") Cancel
+            input.btn.btn-primary(type="submit" value="Submit")
 
-        div
-            input(type="submit" value="Submit")
-
-
-        if message
-            p #{message}
-
+    if message
+        p #{message}

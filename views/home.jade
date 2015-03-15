@@ -11,8 +11,36 @@ block content
         each idea in ideas
             li 
                 a(href='/idea=#{idea._id}') #{idea.title}, #{idea.description}, #{idea.industry}
-    p
-        a(href='/new-idea') Propose a new idea
+        
+    <!-- A dialog for a new idea form -->
+    div(ng-controller="NewIdeaCtrl")
+        script(type="text/ng-template" id="newIdeaModal.jade")
+            div.modal-header
+                h3 Propose New Idea
+            form(ng-submit="newIdea()")
+
+                div.modal-body
+                    label Title
+                    input(type="text", placeholder="Title", required, autofocus, ng-model="title")
+                    br
+                    p Description   
+                    textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
+                    br
+                    label Industry
+                    select(ng-model="industry")
+                        option(value="Health") Health
+                        option(value="Technology") Technology
+
+                div.modal-footer
+                    button.btn.btn-warning(ng-click="cancel()") Cancel
+                    input.btn.btn-primary(type="submit" value="Submit")
+
+                if err
+                    p {{ errmsg }}
+
+        button.btn.btn-primary(ng-click="open()") Propose a new idea
+
+
     p
         a(href='/all') View all ideas
     p

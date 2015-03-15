@@ -3,11 +3,7 @@ var models = require('../models/schema');
 module.exports = {
 
     /* Save a new idea to the database */
-    postIdea : function(req, callback) {
-        var title = req.body.title;
-        var description = req.body.description;
-        var industry = req.body.industry;
-
+    postIdea : function(username, title, description, industry, callback) {
         models.Idea.findOne({'title': title}, function(err, idea) {
             if (err) {
                 console.log("Error in postIdea: " + err);
@@ -26,7 +22,7 @@ module.exports = {
             } else {
                 var newIdea = new models.Idea();
 
-                newIdea.poster = req.user.username;
+                newIdea.poster = username;
                 newIdea.title = title;
                 newIdea.description = description;
                 newIdea.industry = industry;

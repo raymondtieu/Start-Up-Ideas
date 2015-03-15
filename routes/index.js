@@ -60,14 +60,13 @@ module.exports = function(passport) {
 
     /* Handle idea POST */
     router.post('/new-idea', function(req, res) {
-        startup.postIdea(req, function(result) {
-            if (result.success) {
-                res.redirect('/home');
-            } else {
-                console.log(result.errmsg);
-                req.flash('new-idea-err', result.errmsg);
-                res.redirect('/new-idea');
-            }
+        title = req.query.title;
+        description = req.query.description;
+        industry = req.query.industry;
+
+        startup.postIdea(req.user.username, title, description, industry, 
+        function(result) {
+            res.send(result);
         });
     });
 
