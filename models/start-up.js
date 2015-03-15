@@ -130,6 +130,18 @@ module.exports = {
                 });
             });
         });
+    },
+
+    deleteIdea: function(id, callback) {
+        models.Idea.findByIdAndRemove(id, function(err) {
+            if (err) {
+                console.log("Error in deleteIdea: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            callback({success: true});
+        });
     }
 }
 

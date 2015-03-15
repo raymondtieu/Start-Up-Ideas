@@ -9,6 +9,8 @@ block content
     if (user.username == idea.poster)
         p
             a(href='/idea=#{idea._id}/update') Update Idea
+        p
+            a(href='/idea=#{idea._id}/delete') Delete Idea
     p
         a(href='/signout') Sign Out
 

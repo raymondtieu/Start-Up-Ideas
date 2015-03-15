@@ -71,6 +71,13 @@ module.exports = function(passport) {
         });
     });
 
+    /* GET the page for an idea */
+    router.get('/idea=:id', isAuthenticated, function(req, res) {
+        startup.getIdea(req.params.id, function(result) {
+            res.render('idea', {user: req.user, idea: result.idea});
+        });
+    });
+
     /* GET a form to update an existing idea */
     router.get('/idea=:id/update', isAuthenticated, function(req, res) {
         var id = req.params.id;
@@ -108,12 +115,15 @@ module.exports = function(passport) {
         });
     });
 
-    /* GET the page for an idea */
-    router.get('/idea=:id', isAuthenticated, function(req, res) {
-        startup.getIdea(req.params.id, function(result) {
-            res.render('idea', {user: req.user, idea: result.idea});
+    /* Handle an idea DELETE */
+    router.get('/idea=:id/delete', function(req, res) {
+        var id = req.params.id;
+        startup.deleteIdea(id, function(result) {
+            if (result.success) {
+                res.redirect('/home');
+            }
         });
     });
-
+    
     return router;
 }

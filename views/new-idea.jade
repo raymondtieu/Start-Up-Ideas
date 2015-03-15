@@ -9,7 +9,7 @@ block content
             input(type="text" name="title" placeholder="Title", required, autofocus, value=title)
         div
             p Description
-            input(type="text" name="description" placeholder="Description", required, value=description)
+            textarea(cols="40" rows="5" name="description" placeholder="Description", required) #{description}
         div
             p Industry
             select(name="industry")
