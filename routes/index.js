@@ -26,7 +26,7 @@ module.exports = function(passport) {
 
     /* GET home page */
     router.get('/home', isAuthenticated, function(req, res){
-        res.render('home', { user: req.user });
+        res.render('home', {user: req.user});
     });
 
     /* GET registration page */
@@ -55,7 +55,15 @@ module.exports = function(passport) {
     /* Handle idea POST */
     router.post('/new-idea', function(req, res) {
         startup.postIdea(req, function(result) {
-            console.log(result);
+            if (result.success) {
+                res.redirect('/home');
+            } else {
+                console.log(result.message);
+                req.flash('message', result.message);
+                res.render('new-idea', {
+                    message: req.flash('message')
+                });
+            }
         });
     });
 

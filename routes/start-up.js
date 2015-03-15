@@ -18,9 +18,10 @@ module.exports = {
             // idea already exists with same title
             if (idea) {
                 console.log("Idea already exists with title: " + title);
-                req.flash({'message': "Another idea exists with the same title"});
+                
+                callback({success: false, errmsg: "Idea already exists", 
+                    message: "Another idea exists with the same title"});
 
-                callback({success: false, errmsg: "Idea already exists"});
                 return;
             } else {
                 var newIdea = new models.Idea();
