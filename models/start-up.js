@@ -238,7 +238,11 @@ module.exports = {
                 callback({success: false, errmsg: "Idea does not exist"});
             }
         });
-    }
+    },
+
+    /* Get the preference a user gave to an idea */
+
+    /* Update the preference a user gave to an idea */
 }
 
 
