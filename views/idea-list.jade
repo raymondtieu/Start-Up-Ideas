@@ -1,19 +1,14 @@
 extends layout
 
 block content
-    ul
-        li Username: #{user.username}
-        li Email: #{user.email}
-        li Password: #{user.password}
-
-    h4 My Ideas
+    h4 All Ideas
     ul
         each idea in ideas
             li #{idea.title}, #{idea.description}, #{idea.industry}
+            
     p
         a(href='/new-idea') Propose a new idea
-    p
-        a(href='/all') View all ideas
+
     p
         a(href='/signout') Sign Out
 

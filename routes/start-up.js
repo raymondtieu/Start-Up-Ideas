@@ -58,7 +58,7 @@ module.exports = {
     },
 
     getAllIdeas : function(callback) {
-        models.Idea.find({}, function(err, ideas) {
+        models.Idea.find({}).sort({title: 'asc'}).exec(function(err, ideas) {
             if (err) {
                 console.log("Error in getIdeasByUser: " + err);
                 callback({success: false, errmsg: err});
