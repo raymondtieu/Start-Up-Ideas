@@ -85,6 +85,7 @@ module.exports = {
         });
     },
 
+    /* Update an existing idea given an id and new values */
     updateIdea: function(id, body, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
@@ -96,8 +97,6 @@ module.exports = {
             var title = body.title;
             var description = body.description;
             var industry = body.industry;
-
-            console.log("Update idea is " + title + ", " + description + ", " + industry);
 
             models.Idea.findOne({'title': title}, function(err, eidea) {
                 if (err) {
@@ -132,20 +131,37 @@ module.exports = {
         });
     },
 
+    /* Delete an existing idea given an id */
     deleteIdea: function(id, callback) {
-        models.Idea.findByIdAndRemove(id, function(err) {
+        models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in deleteIdea: " + err);
                 callback({success: false, errmsg: err});
                 return;
             }
 
-            // delete all likes/dislikes
+            // also delete all preferences about idea given by other users
+            models.Preference.remove({title: idea.title}, function(err) {
+                if (err) {
+                    console.log("Error in deleteIdea: " + err);
+                    callback({success: false, errmsg: err});
+                    return;
+                }
 
-            callback({success: true});
+                models.Idea.findByIdAndRemove(id, function(err) {
+                    if (err) {
+                        console.log("Error in deleteIdea: " + err);
+                        callback({success: false, errmsg: err});
+                        return;
+                    }
+
+                    callback({success: true});
+                });
+            });
         });
     },
 
+    /* Get the sum of all preferences of an idea given an id */
     getPreference: function(id, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
@@ -176,6 +192,7 @@ module.exports = {
         });
     },
 
+    /* Add a preference to an idea by a user given an id, a user and like/dislike */
     addPreference: function(id, username, p, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
