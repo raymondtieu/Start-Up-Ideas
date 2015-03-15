@@ -26,7 +26,11 @@ module.exports = function(passport) {
 
     /* GET home page */
     router.get('/home', isAuthenticated, function(req, res){
-        res.render('home', {user: req.user});
+        startup.getIdeasByUser(req.user.username, function(result) {
+            ideas = result.ideas;
+            console.log(ideas);
+            res.render('home', {user: req.user, ideas: ideas});
+        });
     });
 
     /* GET registration page */

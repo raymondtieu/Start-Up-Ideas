@@ -43,5 +43,17 @@ module.exports = {
             }
 
         });
+    },
+
+    getIdeasByUser : function(username, callback) {
+        models.Idea.find({poster: username}, function(err, ideas) {
+            if (err) {
+                console.log("Error in getIdeasByUser: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            callback({success: true, ideas: ideas});
+        });
     }
 }

@@ -24,8 +24,8 @@ module.exports = function(passport){
                         return callback(null, false, req.flash('message','User already exists'));
                     } else {
                         // regex for a valid username
-                        // accepts only 8-16 alphanumeric characters
-                        usernameRegex = /^[a-zA-Z0-9]{7,16}$/;
+                        // accepts only 5-16 alphanumeric characters
+                        usernameRegex = /^[a-zA-Z0-9]{5,16}$/;
 
                         // check for a valid username
                         if (!(username.match(usernameRegex))) {
