@@ -3,7 +3,7 @@ extends layout
 block content
     h1 New Start-up idea
 
-    form(action="/new-idea", method="POST")
+    form(action="/new-idea", method="POST" id="idea")
         div
             p Title
             input(type="text" name="title" placeholder="Title", required, autofocus)
@@ -12,9 +12,15 @@ block content
             input(type="text" name="description" placeholder="Description", required)
         div
             p Industry
-            input(type="text" name="industry" placeholder="Industry", required)
+            select(name="industry")
+                option(value="health") Health
+                option(value="technology") Technology
+                option(value="education") Education
+                option(value="finance") Finance
+                option(value="travel") Travel
         div
             input(type="submit" value="Submit")
+
 
         if message
             p #{message}
