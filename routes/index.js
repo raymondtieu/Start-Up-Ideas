@@ -54,7 +54,8 @@ module.exports = function(passport) {
     router.get('/new-idea', isAuthenticated, function(req, res) {
         var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
 
-        res.render('new-idea', {action: '/new-idea', industries: ind});
+        res.render('new-idea', {action: '/new-idea', industries: ind, 
+            message: req.flash('new-idea-err')});
     });
 
     /* Handle idea POST */
@@ -64,10 +65,8 @@ module.exports = function(passport) {
                 res.redirect('/home');
             } else {
                 console.log(result.errmsg);
-                req.flash('message', result.errmsg);
-                res.render('new-idea', {
-                    message: req.flash('message')
-                });
+                req.flash('new-idea-err', result.errmsg);
+                res.redirect('/new-idea');
             }
         });
     });
@@ -82,7 +81,8 @@ module.exports = function(passport) {
             res.render('new-idea', {title: idea.title, 
                 description: idea.description, industry: idea.industry,
                 action: '/idea='+id+'/update',
-                industries: ind});
+                industries: ind,
+                message: req.flash('update-idea-err')});
         });
         
     });
@@ -90,15 +90,13 @@ module.exports = function(passport) {
     /* Handle update idea POST */
     router.post('/idea=:id/update', function(req,res) {
         var id = req.params.id;
-        console.log('please');
         startup.updateIdea(id, req.body, function(result) {
             if (result.success) {
                 res.redirect('/idea=' + id);
             } else {
                 console.log(result.errmsg);
-                req.flash('message', result.errmsg);
-                res.render('/idea=' + id + '/update', 
-                    {message: req.flash('message')});
+                req.flash('update-idea-err', result.errmsg);
+                res.redirect('/idea=' + id + '/update');
             }
         });
     });
@@ -113,7 +111,7 @@ module.exports = function(passport) {
     /* GET the page for an idea */
     router.get('/idea=:id', isAuthenticated, function(req, res) {
         startup.getIdea(req.params.id, function(result) {
-            res.render('idea', {idea: result.idea});
+            res.render('idea', {user: req.user, idea: result.idea});
         });
     });
 

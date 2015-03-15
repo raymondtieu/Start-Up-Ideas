@@ -5,9 +5,10 @@ block content
     p #{idea.poster}
     p #{idea.description}
     p #{idea.industry}
-            
-    p
-        a(href='/idea=#{idea._id}/update') Update Idea
+    
+    if (user.username == idea.poster)
+        p
+            a(href='/idea=#{idea._id}/update') Update Idea
     p
         a(href='/signout') Sign Out
 
