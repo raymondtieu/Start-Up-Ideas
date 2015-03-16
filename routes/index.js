@@ -96,8 +96,9 @@ module.exports = function(passport) {
         title = req.query.title;
         description = req.query.description;
         industry = req.query.industry;
+        keywords = req.query.keywords;
 
-        startup.updateIdea(id, title, description, industry, function(result) {
+        startup.updateIdea(id, title, description, industry, keywords, function(result) {
             res.send(result);
         });
     });
