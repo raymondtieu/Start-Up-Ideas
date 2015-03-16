@@ -16,7 +16,9 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
     $scope.open = function() {
         openModal($scope, $modal, $http, '/new-idea', 
             {title: '', description: '', industry: 'Health'},
-            "POST");
+            "POST", function($result) {
+                $scope.ideas.push($result.idea);
+            });
     }
 });
 
@@ -58,7 +60,11 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 
     $scope.open = function() {
         openModal($scope, $modal, $http, window.location.href + '/update', 
-            $scope.idea, "PUT");
+            $scope.idea, "PUT", function($result) {
+                $scope.idea.title = $result.idea.title;
+                $scope.idea.description = $result.idea.description;
+                $scope.idea.industry = $result.idea.industry;
+            });
     }
 
     $scope.delete = function() {
@@ -98,46 +104,46 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
     }
 });
 
-function openModal($scope, $modal, $http, url, idea, method) {
+function openModal($scope, $modal, $http, url, idea, method, callback) {
 
     $modal.open({
-    templateUrl: 'idea-modal.jade',
-    backdrop: true,
-    windowClass: 'modal',
-    controller: function($scope, $modalInstance, $log) {
-        $scope.industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
-        $scope.title = idea.title;
-        $scope.description = idea.description;
-        $scope.industry = idea.industry;
+        templateUrl: 'idea-modal.jade',
+        backdrop: true,
+        windowClass: 'modal',
+        controller: function($scope, $modalInstance, $log) {
+            $scope.industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
+            $scope.title = idea.title;
+            $scope.description = idea.description;
+            $scope.industry = idea.industry;
 
-        $scope.submit = function() {
-            if (!$scope.title || !$scope.description || !$scope.industry) {
-                $scope.errmsg = "Please fill out all fields"
-            } else {
-                $http({
-                    url: url,
-                    method: method,
-                    params: {title: $scope.title,
-                        description: $scope.description,
-                        industry: $scope.industry
-                    }
-                }).success(function($result) {
-                    if ($result.success) {
-                        console.log($result);
-                        $modalInstance.dismiss('cancel');
-                        window.location.reload();
-                    } else {
-                        $scope.errmsg = $result.errmsg;
-                    }
-                });
+            $scope.submit = function() {
+                if (!$scope.title || !$scope.description || !$scope.industry) {
+                    $scope.errmsg = "Please fill out all fields"
+                } else {
+                    $http({
+                        url: url,
+                        method: method,
+                        params: {title: $scope.title,
+                            description: $scope.description,
+                            industry: $scope.industry
+                        }
+                    }).success(function($result) {
+                        if ($result.success) {
+                            console.log($result);
+                            $modalInstance.dismiss('cancel');
+                            callback($result);
+                        } else {
+                            $scope.errmsg = $result.errmsg;
+                        }
+                    });
+                }
+            }
+
+            $scope.cancel = function() {
+                $modalInstance.dismiss('cancel');
             }
         }
-
-        $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
-        }
-    }
-});
+    });
 }
 
 

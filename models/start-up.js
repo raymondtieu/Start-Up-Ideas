@@ -117,7 +117,7 @@ module.exports = {
                     }
                     console.log('Idea updated succesfully');    
                     
-                    callback({success: true});
+                    callback({success: true, idea: idea});
                 });
             });
         });
