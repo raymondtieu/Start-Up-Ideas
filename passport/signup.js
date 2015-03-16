@@ -26,26 +26,20 @@ module.exports = function(passport){
                         // regex for a valid name
                         nameRegex = /^[a-zA-Z]{1,16}$/;
 
-                        // check for a valid username
-                        if (!(req.body.name.match(nameRegex))) {
-                            return callback(null, false, 
-                                req.flash('message', 
-                                    'Invalid name'));
-                        }
+                        // check for a valid name
+                        if (!(req.body.name.match(nameRegex)))
+                            return callback(null, false, req.flash('message', 'Invalid name'));
 
                         // check for valid email
                         var email = username;
                         if (!(validator.validate(email)))
                             return callback(null, false, req.flash('message', 'Invalid email'));
 
-
                         // check for matching passwords
-                        if (password != req.body.psagain) {
+                        if (password != req.body.psagain)
                             return callback(null, false, req.flash('message', 'Passwords do not match'));
-                        }
-
                         
-                        // if there is no user with that username, create one
+                        // if there is no user with that email, create one
                         var newUser = new models.User();
 
                         newUser.name = req.body.name;
