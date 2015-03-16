@@ -71,7 +71,7 @@ module.exports = function(passport) {
         res.render('idea');
     });
 
-    /* GET an idea given an id  */
+    /* GET an idea and preferences given an id  */
     router.get('/idea', isAuthenticated, function(req, res) {
         var id = req.query.id;
 
@@ -87,22 +87,6 @@ module.exports = function(passport) {
             }            
         });
     })
-
-    /* GET a form to update an existing idea */
-    router.get('/idea=:id/update', isAuthenticated, function(req, res) {
-        var id = req.params.id;
-        startup.getIdea(id, function(result) {
-            var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
-            var idea = result.idea;
-
-            res.render('new-idea', {title: idea.title, 
-                description: idea.description, industry: idea.industry,
-                action: '/idea='+id+'/update',
-                industries: ind,
-                message: req.flash('update-idea-err')});
-        });
-        
-    });
 
     /* Handle update idea PUT */
     router.put('/idea=:id/update', function(req,res) {
@@ -142,7 +126,6 @@ module.exports = function(passport) {
 
         startup.addPreference(id, req.user.username, 1, function(result) {
             if (result.success) {
-                console.log(result);
                 res.send(result);
             }
         });

@@ -48,7 +48,6 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
                 $scope.give_preference = true;
             } else {
                 if (result.preference.preference == 1) {
-                    console.log("LIKED");
                     $scope.pref_msg = "You liked this idea"
                 } else
                     $scope.pref_msg = "You disliked this idea"
@@ -77,8 +76,11 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             url: '/idea=' + $scope.idea._id + '/like',
             method: "POST"
         }).success(function(result) {
-            $scope.give_preference = true;
-            window.location.reload();
+            $scope.give_preference = false;
+            $scope.pref_msg = "You liked this idea"
+
+            /* temporary */
+            $scope.preference += 1;
         })
     }
 
@@ -87,8 +89,11 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             url: '/idea=' + $scope.idea._id + '/dislike',
             method: "POST"
         }).success(function(result) {
-            $scope.give_preference = true;
-            window.location.reload();
+            $scope.give_preference = false;
+            $scope.pref_msg = "You disliked this idea"
+
+            /* temporary */
+            $scope.preference -= 1;
         })
     }
 });

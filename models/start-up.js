@@ -90,7 +90,7 @@ module.exports = {
                 return;
             }
 
-            models.Idea.findOne({'title': title}, function(err, eidea) {
+            models.Idea.findOne({'title': new RegExp(title, "i")}, function(err, eidea) {
                 if (err) {
                     console.log("Error in updateIdea: " + err);
                     callback({success: false, errmsg: err});
