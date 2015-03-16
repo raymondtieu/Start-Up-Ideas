@@ -13,10 +13,11 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
         }
     });
 
+    var idea = {title: '', description: '', industry: 'Health', keywords: ''}
+
     $scope.open = function() {
-        openModal($scope, $modal, $http, '/new-idea', 
-            {title: '', description: '', industry: 'Health'},
-            "POST", function($result) {
+        openModal($scope, $modal, $http, '/new-idea', idea, "POST", 
+            function($result) {
                 $scope.ideas.push($result.idea);
             });
     }
@@ -43,7 +44,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
         $http({
             url: '/preference',
             method: "GET",
-            params: {title: $scope.idea.title, username: $scope.user.username}
+            params: {title: $scope.idea.title, email: $scope.user.email}
         }).success(function(result) {
             if (result.success) {
                 console.log(result);
@@ -61,9 +62,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
     $scope.open = function() {
         openModal($scope, $modal, $http, window.location.href + '/update', 
             $scope.idea, "PUT", function($result) {
-                $scope.idea.title = $result.idea.title;
-                $scope.idea.description = $result.idea.description;
-                $scope.idea.industry = $result.idea.industry;
+                $scope.idea = $result.idea;
             });
     }
 
@@ -121,6 +120,10 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
 
                 $title = trimInput($scope.title);
 
+                $keywords = '';
+                if ($scope.keywords)
+                    $keywords = trimInput($scope.keywords);
+
                 if (!($title.match(titleRegex))) {
                     $scope.errmsg = "Enter a title with only letter characters or spaces";
                 } else if (!$scope.title || !$scope.description || !$scope.industry) {
@@ -131,7 +134,8 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
                         method: method,
                         params: {title: $title,
                             description: $scope.description,
-                            industry: $scope.industry
+                            industry: $scope.industry,
+                            keywords: $keywords
                         }
                     }).success(function($result) {
                         if ($result.success) {

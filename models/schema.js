@@ -14,7 +14,7 @@ var IdeaSchema = new Schema({
     description: {type: String, required: true, trim: true},
     industry: {type: String, required: true, trim: true},
     keywords: {type: String, trim: true},
-    posted: {type: Date, required: true} 
+    posted: {type: Date, default: Date.now} 
 });
 
 var PreferenceSchema = new Schema({

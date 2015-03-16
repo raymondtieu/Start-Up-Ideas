@@ -49,7 +49,7 @@ module.exports = function(passport) {
 
     /* GET all ideas by current user */
     router.get('/my-ideas', isAuthenticated, function(req, res) {
-        startup.getIdeasByUser(req.user.username, function(result) {
+        startup.getIdeasByUser(req.user.email, function(result) {
             res.send(result);
         })
     });
@@ -59,8 +59,9 @@ module.exports = function(passport) {
         title = req.query.title;
         description = req.query.description;
         industry = req.query.industry;
+        keywords = req.query.keywords
 
-        startup.postIdea(req.user.username, title, description, industry, 
+        startup.postIdea(req.user.email, title, description, industry, keywords,
             function(result) {
                 res.send(result);
             });
@@ -124,7 +125,7 @@ module.exports = function(passport) {
 
         console.log(id);
 
-        startup.addPreference(id, req.user.username, 1, function(result) {
+        startup.addPreference(id, req.user.email, 1, function(result) {
             if (result.success) {
                 res.send(result);
             }
@@ -134,7 +135,7 @@ module.exports = function(passport) {
     /* Handle dislike idea POST */
     router.post('/idea=:id/dislike', isAuthenticated, function(req, res) {
         var id = req.params.id;
-        startup.addPreference(id, req.user.username, -1, function(result) {
+        startup.addPreference(id, req.user.email, -1, function(result) {
             if (result.success) {
                 res.send(result);
             }
@@ -144,9 +145,9 @@ module.exports = function(passport) {
     /* GET preference given by user for idea */
     router.get('/preference', isAuthenticated, function(req, res) {
         var title = req.query.title;
-        var username = req.query.username;
+        var email = req.query.email;
 
-        startup.getPreference(username, title, function(result) {
+        startup.getPreference(email, title, function(result) {
             res.send(result);
         })
     });

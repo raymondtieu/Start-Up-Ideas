@@ -3,8 +3,8 @@ var models = require('../models/schema');
 module.exports = {
 
     /* Save a new idea to the database */
-    postIdea : function(username, title, description, industry, callback) {
-        models.Idea.findOne({'title': new RegExp(title, "i")}, function(err, idea) {
+    postIdea : function(email, title, description, industry, keywords, callback) {
+        models.Idea.findOne({'title': new RegExp('^' + title + '$', "i")}, function(err, idea) {
             if (err) {
                 console.log("Error in postIdea: " + err);
                 callback({success: false, errmsg: err});
@@ -22,10 +22,11 @@ module.exports = {
             } else {
                 var newIdea = new models.Idea();
 
-                newIdea.poster = username;
+                newIdea.poster = email;
                 newIdea.title = title;
                 newIdea.description = description;
                 newIdea.industry = industry;
+                newIdea.keywords = keywords;
 
                 newIdea.save(function(err) {
                     if (err){
@@ -42,8 +43,8 @@ module.exports = {
     },
 
     /* Return all ideas posted by the user given a username */
-    getIdeasByUser : function(username, callback) {
-        models.Idea.find({poster: username}, function(err, ideas) {
+    getIdeasByUser : function(email, callback) {
+        models.Idea.find({poster: email}, function(err, ideas) {
             if (err) {
                 console.log("Error in getIdeasByUser: " + err);
                 callback({success: false, errmsg: err});
@@ -82,7 +83,7 @@ module.exports = {
     },
 
     /* Update an existing idea given an id and new values */
-    updateIdea: function(id, title, description, industry, callback) {
+    updateIdea: function(id, title, description, industry, keywords, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in updateIdea: " + err);
@@ -90,7 +91,7 @@ module.exports = {
                 return;
             }
 
-            models.Idea.findOne({'title': new RegExp(title, "i")}, function(err, eidea) {
+            models.Idea.findOne({'title': new RegExp('^' + title + '$', "i")}, function(err, eidea) {
                 if (err) {
                     console.log("Error in updateIdea: " + err);
                     callback({success: false, errmsg: err});
@@ -109,6 +110,7 @@ module.exports = {
                 idea.title = title;
                 idea.description = description;
                 idea.industry = industry;
+                idea.keywords = keywords;
 
                 idea.save(function(err) {
                     if (err){
@@ -185,7 +187,7 @@ module.exports = {
     },
 
     /* Add a preference to an idea by a user given an id, a user and like/dislike */
-    addPreference: function(id, username, p, callback) {
+    addPreference: function(id, email, p, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in addPreference: " + err);
@@ -194,7 +196,7 @@ module.exports = {
             }
 
             if (idea) {
-                models.Preference.findOne({title: idea.title, username: username})
+                models.Preference.findOne({title: idea.title, email: email})
                 .exec(function(err, preference) {
                     if (err) {
                         console.log("Error in addPreference: " + err);
@@ -211,11 +213,11 @@ module.exports = {
                     } else {
                         var newPref = new models.Preference();
 
-                        newPref.username = username;
+                        newPref.email = email;
                         newPref.title = idea.title;
                         newPref.preference = p;
 
-                        console.log(username, idea.title);
+                        console.log(email, idea.title);
 
                         newPref.save(function(err) {
                             if (err){
@@ -235,8 +237,8 @@ module.exports = {
     },
 
     /* Get the preference a user gave to an idea */
-    getPreference: function(username, title, callback) {
-        models.Preference.findOne({title: title, username: username}, function(err, preference) {
+    getPreference: function(email, title, callback) {
+        models.Preference.findOne({title: title, email: email}, function(err, preference) {
             if (err) {
                 console.log("Error in getPreference: " + err);
                 callback({success: false, errmsg: err});

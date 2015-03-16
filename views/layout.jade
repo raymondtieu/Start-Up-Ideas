@@ -26,6 +26,8 @@ html(ng-app="startUp")
             br
             label Industry
             select(ng-model="industry" ng-options="i for i in industries")
+            label Keywords
+            input(type="text", placeholder="Keywords", ng-model="keywords")
 
         div.modal-footer
             button.btn.btn-warning(ng-click="cancel()") Cancel
