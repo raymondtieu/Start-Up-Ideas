@@ -10,8 +10,8 @@ module.exports = function(passport){
         function(req, username, password, callback) {
 
             findOrCreateUser = function() {
-                // find a user in db with username
-                models.User.findOne({'username': new RegExp(username.trim(), "i")}, function(err, user) {
+                // find a user in db with the same email
+                models.User.findOne({email: new RegExp('^' + username + '$', 'i')}, function(err, user) {
                     // In case of any error, return using the callback
                     if (err){
                         console.log('Error in SignUp: ' + err);
@@ -21,33 +21,34 @@ module.exports = function(passport){
                     // user already exists
                     if (user) {
                         console.log('User already exists: ' + username);
-                        return callback(null, false, req.flash('message','User already exists'));
+                        return callback(null, false, req.flash('message','Email is already in use'));
                     } else {
-                        // regex for a valid username
-                        // accepts only 5-16 alphanumeric characters
-                        usernameRegex = /^[a-zA-Z0-9]{5,16}$/;
+                        // regex for a valid name
+                        nameRegex = /^[a-zA-Z]{1,16}$/;
 
                         // check for a valid username
-                        if (!(username.match(usernameRegex))) {
+                        if (!(req.body.name.match(nameRegex))) {
                             return callback(null, false, 
                                 req.flash('message', 
-                                    'Invalid username'));
+                                    'Invalid name'));
                         }
+
+                        // check for valid email
+                        var email = username;
+                        if (!(validator.validate(email)))
+                            return callback(null, false, req.flash('message', 'Invalid email'));
+
 
                         // check for matching passwords
                         if (password != req.body.psagain) {
                             return callback(null, false, req.flash('message', 'Passwords do not match'));
                         }
 
-                        // check for valid email
-                        var email = req.body.email;
-                        if (!(validator.validate(email)))
-                            return callback(null, false, req.flash('message', 'Invalid email'));
-
+                        
                         // if there is no user with that username, create one
                         var newUser = new models.User();
 
-                        newUser.username = username;
+                        newUser.name = req.body.name;
                         newUser.email = email;
                         newUser.password = password;
 

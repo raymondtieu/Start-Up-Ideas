@@ -9,7 +9,7 @@ module.exports = function(passport) {
 
         function(req, username, password, callback) {
             // Check if user exists
-            models.User.findOne({'username': username},
+            models.User.findOne({'email': new RegExp('^' + username + '$', 'i')},
                 function(err, user) {
                     if (err)
                         return callback(err);
