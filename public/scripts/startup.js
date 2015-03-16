@@ -4,6 +4,7 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
     $scope.ideas = [];
     $scope.errmsg = '';
     
+    // get list of all ideas by this user
     $http({
         url: '/my-ideas',
         method: "GET",
@@ -13,8 +14,10 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
         }
     });
 
+    // default values for new idea form
     var idea = {title: '', description: '', industry: 'Health', keywords: ''}
 
+    // open modal when user wants to submit a new idea
     $scope.open = function() {
         openModal($scope, $modal, $http, '/new-idea', idea, "POST", 
             function($result) {
@@ -31,6 +34,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 
     var id = window.location.href.split('=')[1];
 
+    // get details about this idea
     $http({
         url: '/idea',
         method: "GET",
@@ -47,6 +51,8 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
                 params: {title: $scope.idea.title}
             }).success(function(result) {
                 if (result.success) {
+                    // set amount of likes/dislikes for this idea
+                    // determine whether this user liked/disliked this idea
                     getPreferences(result.preferences, $scope.user.email,
                         function(p) {
                             $scope.idea.likes = p.likes;
@@ -60,7 +66,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 
     });
 
-
+    // open modal when user wants to update this idea
     $scope.open = function() {
         openModal($scope, $modal, $http, window.location.href + '/update', 
             $scope.idea, "PUT", function($result) {
@@ -68,6 +74,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             });
     }
 
+    // redirect back home when user wants to delete this idea
     $scope.delete = function() {
         $http({
             url: '/idea=' + $scope.idea._id + '/delete',
@@ -78,6 +85,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
         })
     }
 
+    // update this user's preference about this idea
     $scope.like = function() {
         $http({
             url: '/idea=' + $scope.idea._id + '/like',
@@ -91,6 +99,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
         })
     }
 
+    // update this user's preference about this idea
     $scope.dislike = function() {
         $http({
             url: '/idea=' + $scope.idea._id + '/dislike',
@@ -105,21 +114,24 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
     }
 });
 
-function openModal($scope, $modal, $http, url, idea, method, callback) {
 
+/* Open a modal to handle a new or updating an idea */
+function openModal($scope, $modal, $http, url, idea, method, callback) {
     $modal.open({
         templateUrl: 'idea-modal.jade',
         backdrop: true,
         windowClass: 'modal',
         controller: function($scope, $modalInstance, $log) {
+            // available industries to choose from 
             $scope.industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
             $scope.title = idea.title;
             $scope.description = idea.description;
             $scope.industry = idea.industry;
 
             $scope.submit = function() {
-                titleRegex = /^[a-zA-Z\ ]{5,30}$/;
 
+                // client-side form validation
+                titleRegex = /^[a-zA-Z\ ]{5,30}$/;
                 $title = trimInput($scope.title);
 
                 $keywords = '';
@@ -127,10 +139,11 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
                     $keywords = trimInput($scope.keywords);
 
                 if (!($title.match(titleRegex))) {
-                    $scope.errmsg = "Enter a title with only letter characters or spaces";
+                    $scope.errmsg = "Invalid title. 5-30 letter characters only.";
                 } else if (!$scope.title || !$scope.description || !$scope.industry) {
                     $scope.errmsg = "Please fill out all fields";
                 } else {
+                    // send HTTP request if form passes server side validation
                     $http({
                         url: url,
                         method: method,
@@ -158,6 +171,9 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
     });
 }
 
+
+/* Trim and replace all whitespace inbetween characters with a single 
+   whitespace character given a string */
 function trimInput(str) {
     var s = str.split(' ');
     var t = [];
@@ -168,6 +184,8 @@ function trimInput(str) {
     return t.join(' ');
 }
 
+
+/* Calculate likes and dislikes given a list of preferences */
 function getPreferences(p, email, callback) {
     var likes = 0;
     var dislikes = 0;
