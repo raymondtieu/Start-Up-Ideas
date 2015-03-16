@@ -11,7 +11,7 @@ module.exports = function(passport){
 
             findOrCreateUser = function() {
                 // find a user in db with username
-                models.User.findOne({'username': "/^" + username + "$/i"}, function(err, user) {
+                models.User.findOne({'username': new RegExp(username.trim(), "i")}, function(err, user) {
                     // In case of any error, return using the callback
                     if (err){
                         console.log('Error in SignUp: ' + err);
