@@ -3,7 +3,7 @@ var models = require('../models/schema');
 module.exports = {
 
     /* Save a new idea to the database */
-    postIdea : function(email, title, description, industry, keywords, callback) {
+    postIdea : function(user, title, description, industry, keywords, callback) {
         models.Idea.findOne({'title': new RegExp('^' + title + '$', "i")}, function(err, idea) {
             if (err) {
                 console.log("Error in postIdea: " + err);
@@ -22,7 +22,8 @@ module.exports = {
             } else {
                 var newIdea = new models.Idea();
 
-                newIdea.poster = email;
+                newIdea.email = user.email;
+                newIdea.poster = user.name;
                 newIdea.title = title;
                 newIdea.description = description;
                 newIdea.industry = industry;
@@ -43,8 +44,8 @@ module.exports = {
     },
 
     /* Return all ideas posted by the user given a username */
-    getIdeasByUser : function(email, callback) {
-        models.Idea.find({poster: email}, function(err, ideas) {
+    getIdeasByUser : function(user, callback) {
+        models.Idea.find({email: user.email}, function(err, ideas) {
             if (err) {
                 console.log("Error in getIdeasByUser: " + err);
                 callback({success: false, errmsg: err});
@@ -58,7 +59,7 @@ module.exports = {
     /* Return all posted ideas */
     getAllIdeas : function(callback) {
         // sort ideas by their name
-        models.Idea.find({}).sort({title: 'asc'}).exec(function(err, ideas) {
+        models.Idea.find({}, function(err, ideas) {
             if (err) {
                 console.log("Error in getAllIdeas: " + err);
                 callback({success: false, errmsg: err});
@@ -70,7 +71,7 @@ module.exports = {
     },
 
     /* Return an idea given an id */
-    getIdea : function(id, callback) {
+    getIdea : function(user, id, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in getIdea: " + err);
@@ -78,7 +79,7 @@ module.exports = {
                 return;
             }
 
-            callback({success: true, idea: idea});
+            callback({success: true, user: user, idea: idea});
         });
     },
 
@@ -155,36 +156,6 @@ module.exports = {
         });
     },
 
-    /* Get the sum of all preferences of an idea given an id */
-    getSumPreference: function(id, callback) {
-        models.Idea.findById(id, function(err, idea) {
-            if (err) {
-                console.log("Error in getSumPreference: " + err);
-                callback({success: false, errmsg: err});
-                return;
-            }
-
-            models.Preference.aggregate([
-                {$match: {title: idea.title}},
-                {$group: {
-                    _id: '$title',
-                    sumPref: {$sum: '$preference'}
-                }}
-            ], function(err, result) {
-                if (err) {
-                    console.log("Error in getPreference: " + err);
-                    callback({success: false, errmsg: err});
-                    return;
-                }
-
-                var preference = 0;
-                if (result[0])
-                    preference = result[0].sumPref;
-
-                callback({success: true, preference: preference});
-            });  
-        });
-    },
 
     /* Add a preference to an idea by a user given an id, a user and like/dislike */
     addPreference: function(id, email, p, callback) {
@@ -236,21 +207,16 @@ module.exports = {
         });
     },
 
-    /* Get the preference a user gave to an idea */
-    getPreference: function(email, title, callback) {
-        models.Preference.findOne({title: title, email: email}, function(err, preference) {
+    /* Get the preferences for an idea */
+    getPreferences: function(title, callback) {
+        models.Preference.find({title: title}, function(err, preferences) {
             if (err) {
-                console.log("Error in getPreference: " + err);
+                console.log("Error in getPreferences: " + err);
                 callback({success: false, errmsg: err});
                 return;
             }
 
-            if (preference) {
-                callback({success: false, preference: preference});
-                return;
-            }
-
-            callback({success: true});
+            callback({success: true, preferences: preferences});
         });
     }
 }

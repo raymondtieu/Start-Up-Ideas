@@ -49,7 +49,7 @@ module.exports = function(passport) {
 
     /* GET all ideas by current user */
     router.get('/my-ideas', isAuthenticated, function(req, res) {
-        startup.getIdeasByUser(req.user.email, function(result) {
+        startup.getIdeasByUser(req.user, function(result) {
             res.send(result);
         })
     });
@@ -59,9 +59,9 @@ module.exports = function(passport) {
         title = req.query.title;
         description = req.query.description;
         industry = req.query.industry;
-        keywords = req.query.keywords
+        keywords = req.query.keywords;
 
-        startup.postIdea(req.user.email, title, description, industry, keywords,
+        startup.postIdea(req.user, title, description, industry, keywords,
             function(result) {
                 res.send(result);
             });
@@ -76,16 +76,8 @@ module.exports = function(passport) {
     router.get('/idea', isAuthenticated, function(req, res) {
         var id = req.query.id;
 
-        startup.getIdea(id, function(idea_result) {
-            if (idea_result.success) {
-                startup.getSumPreference(id, function(pref_result){
-                    if (pref_result.success) {
-                        res.send({user: req.user, 
-                            idea: idea_result.idea,
-                            preference: pref_result.preference});
-                    }
-                });
-            }            
+        startup.getIdea(req.user, id, function(result) {
+            res.send(result);
         });
     })
 
@@ -143,12 +135,11 @@ module.exports = function(passport) {
         });
     });
 
-    /* GET preference given by user for idea */
-    router.get('/preference', isAuthenticated, function(req, res) {
+    /* GET all preferences of an idea */
+    router.get('/preferences', isAuthenticated, function(req, res) {
         var title = req.query.title;
-        var email = req.query.email;
 
-        startup.getPreference(email, title, function(result) {
+        startup.getPreferences(title, function(result) {
             res.send(result);
         })
     });

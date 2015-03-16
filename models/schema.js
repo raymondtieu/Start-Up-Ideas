@@ -9,7 +9,8 @@ var UserSchema = new Schema({
 });
 
 var IdeaSchema = new Schema({
-    poster: {type: String, required: true, trim: true},
+    email: {type: String, required: true},
+    poster: {type: String, required: true},
     title: {type: String, required: true, trim: true},
     description: {type: String, required: true, trim: true},
     industry: {type: String, required: true, trim: true},

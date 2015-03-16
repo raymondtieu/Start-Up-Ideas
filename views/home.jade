@@ -8,7 +8,7 @@ block content
 
     div(ng-controller="HomeCtrl")        
         h4 My Ideas
-        ul(ng-repeat="idea in ideas")
+        ul(ng-repeat="idea in ideas | orderBy: 'title'")
             li 
                 a(href='/idea={{ idea._id }}') {{ idea.title }}, {{ idea.description }}, {{ idea.industry }}
 

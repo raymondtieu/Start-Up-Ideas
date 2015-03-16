@@ -25,9 +25,8 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
 
 app.controller('IdeaCtrl', function($scope, $modal, $http) {
     $scope.idea = null;
-    $scope.preference = 0;
     $scope.user = null;
-    $scope.give_preference = false;
+    $scope.gave_preference = false;
     $scope.pref_msg = '';
 
     var id = window.location.href.split('=')[1];
@@ -37,25 +36,28 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
         method: "GET",
         params: {id: id}
     }).success(function(result) {
-        $scope.idea = result.idea;
-        $scope.preference = result.preference;
-        $scope.user = result.user;
+        if (result.success) {
+            $scope.idea = result.idea;
+            $scope.user = result.user;
 
-        $http({
-            url: '/preference',
-            method: "GET",
-            params: {title: $scope.idea.title, email: $scope.user.email}
-        }).success(function(result) {
-            if (result.success) {
-                console.log(result);
-                $scope.give_preference = true;
-            } else {
-                if (result.preference.preference == 1) {
-                    $scope.pref_msg = "You liked this idea"
-                } else
-                    $scope.pref_msg = "You disliked this idea"
-            }
-        });
+            // get all preferences for this idea
+            $http({
+                url: '/preferences',
+                method: "GET",
+                params: {title: $scope.idea.title}
+            }).success(function(result) {
+                if (result.success) {
+                    getPreferences(result.preferences, $scope.user.email,
+                        function(p) {
+                            $scope.idea.likes = p.likes;
+                            $scope.idea.dislikes = p.dislikes;
+                            $scope.gave_preference = p.gave_preference;
+                            $scope.pref_msg = p.msg;
+                        });
+                }
+            });
+        }
+
     });
 
 
@@ -81,11 +83,11 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             url: '/idea=' + $scope.idea._id + '/like',
             method: "POST"
         }).success(function(result) {
-            $scope.give_preference = false;
+            $scope.gave_preference = true;
             $scope.pref_msg = "You liked this idea"
 
             /* temporary */
-            $scope.preference += 1;
+            $scope.idea.like += 1;
         })
     }
 
@@ -94,11 +96,11 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             url: '/idea=' + $scope.idea._id + '/dislike',
             method: "POST"
         }).success(function(result) {
-            $scope.give_preference = false;
+            $scope.gave_preference = true;
             $scope.pref_msg = "You disliked this idea"
 
             /* temporary */
-            $scope.preference -= 1;
+            $scope.idea.dislike -= 1;
         })
     }
 });
@@ -166,4 +168,30 @@ function trimInput(str) {
     return t.join(' ');
 }
 
+function getPreferences(p, email, callback) {
+    var likes = 0;
+    var dislikes = 0;
+    var g = false;
+    var msg = '';
+
+    for (var i = 0; i < p.length; i++) {
+        if (p[i].email == email) {
+            g = true;
+
+            if (p[i].preference == 1)
+                msg = "You liked this idea";
+            else
+                msg = "You disliked this idea";
+        }
+
+        if (p[i].preference == 1)
+            likes++;
+        else
+            dislikes++;
+    }
+
+    callback({likes: likes, dislikes: dislikes, gave_preference: g, 
+        msg: msg});
+    return;
+}
 
