@@ -4,7 +4,9 @@ block content
     div(ng-controller="IdeaCtrl")
         h4 {{ idea.title }}
         p {{ idea.poster }}
-        p {{ idea.description }}
+        br
+        p(style="white-space: pre-wrap") {{ idea.description }}
+        br
         p {{ idea.industry }}
         p {{ preference }}
     
