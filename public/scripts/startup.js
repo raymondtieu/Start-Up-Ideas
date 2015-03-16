@@ -119,7 +119,9 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
             $scope.submit = function() {
                 titleRegex = /^[a-zA-Z\ ]{5,30}$/;
 
-                if (!($scope.title.match(titleRegex))) {
+                $title = trimInput($scope.title);
+
+                if (!($title.match(titleRegex))) {
                     $scope.errmsg = "Enter a title with only letter characters or spaces";
                 } else if (!$scope.title || !$scope.description || !$scope.industry) {
                     $scope.errmsg = "Please fill out all fields";
@@ -127,7 +129,7 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
                     $http({
                         url: url,
                         method: method,
-                        params: {title: $scope.title,
+                        params: {title: $title,
                             description: $scope.description,
                             industry: $scope.industry
                         }
@@ -150,5 +152,14 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
     });
 }
 
+function trimInput(str) {
+    var s = str.split(' ');
+    var t = [];
+    for (i = 0; i < s.length; i++) {
+        if (s[i] != "")
+            t.push(s[i]);
+    }
+    return t.join(' ');
+}
 
 
