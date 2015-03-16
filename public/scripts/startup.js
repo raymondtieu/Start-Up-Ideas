@@ -1,5 +1,6 @@
 var app = angular.module('startUp', ['ui.bootstrap']);
 
+/* Controller for the home page */
 app.controller('HomeCtrl', function($scope, $modal, $http) {
     $scope.ideas = [];
     $scope.errmsg = '';
@@ -26,6 +27,7 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
     }
 });
 
+/* Controller for a single idea */
 app.controller('IdeaCtrl', function($scope, $modal, $http) {
     $scope.idea = null;
     $scope.user = null;
@@ -53,12 +55,12 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
                 if (result.success) {
                     // set amount of likes/dislikes for this idea
                     // determine whether this user liked/disliked this idea
-                    getPreferences(result.preferences, $scope.user.email,
-                        function(p) {
-                            $scope.idea.likes = p.likes;
-                            $scope.idea.dislikes = p.dislikes;
-                            $scope.gave_preference = p.gave_preference;
-                            $scope.pref_msg = p.msg;
+                    getPreferences($scope.idea.title, result.preferences, $scope.user.email,
+                        function(result) {
+                            $scope.idea.likes = result.likes;
+                            $scope.idea.dislikes = result.dislikes;
+                            $scope.gave_preference = result.gave_preference;
+                            $scope.pref_msg = result.msg;
                         });
                 }
             });
@@ -112,6 +114,34 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             $scope.idea.dislike -= 1;
         })
     }
+});
+
+
+/* Controller for the list of all ideas */
+app.controller('ListCtrl', function($scope, $http) {
+    $scope.ideas = [];
+
+    // get a list of all ideas
+    $http({
+        url: '/all-ideas',
+        method: "GET",
+    }).success(function(result) {
+        $scope.ideas = result.ideas;
+
+        // calculate how many likes/dislikes each idea has
+        $http({
+            url: '/all-preferences',
+            method: "GET"
+        }).success(function(result) {
+            for (var i = 0; i < $scope.ideas.length; i++) {
+                getPreferences($scope.ideas[i].title, result.preferences, "",
+                    function(result) {
+                        $scope.ideas[i].likes = result.likes
+                        $scope.ideas[i].dislikes = result.dislikes
+                    });
+            }
+        });
+    });
 });
 
 
@@ -186,26 +216,28 @@ function trimInput(str) {
 
 
 /* Calculate likes and dislikes given a list of preferences */
-function getPreferences(p, email, callback) {
+function getPreferences(title, p, email, callback) {
     var likes = 0;
     var dislikes = 0;
     var g = false;
     var msg = '';
 
     for (var i = 0; i < p.length; i++) {
-        if (p[i].email == email) {
-            g = true;
+        if (p[i].title == title) {
+            if (p[i].email == email) {
+                g = true;
+
+                if (p[i].preference == 1)
+                    msg = "You liked this idea";
+                else
+                    msg = "You disliked this idea";
+            }
 
             if (p[i].preference == 1)
-                msg = "You liked this idea";
+                likes++;
             else
-                msg = "You disliked this idea";
+                dislikes++;
         }
-
-        if (p[i].preference == 1)
-            likes++;
-        else
-            dislikes++;
     }
 
     callback({likes: likes, dislikes: dislikes, gave_preference: g, 

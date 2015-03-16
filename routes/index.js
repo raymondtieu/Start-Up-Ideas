@@ -47,6 +47,19 @@ module.exports = function(passport) {
         res.render('home', {user: req.user});
     });
 
+    /* GET page with list of all ideas */
+    router.get('/all', isAuthenticated, function(req, res) {
+        res.render('idea-list');
+        
+    });
+
+    /* GET all ideas in database */
+    router.get('/all-ideas', function(req, res) {
+        startup.getAllIdeas(function(result) {
+            res.send(result);
+        });
+    });
+
     /* GET all ideas by current user */
     router.get('/my-ideas', isAuthenticated, function(req, res) {
         startup.getIdeasByUser(req.user, function(result) {
@@ -95,13 +108,6 @@ module.exports = function(passport) {
         });
     });
 
-    /* GET page with list of all ideas */
-    router.get('/all', isAuthenticated, function(req, res) {
-        startup.getAllIdeas(function(result) {
-            res.render('idea-list', {ideas: result.ideas});
-        });
-    });
-
     /* Handle an idea DELETE */
     router.delete('/idea=:id/delete', isAuthenticated, function(req, res) {
         var id = req.params.id;
@@ -135,13 +141,20 @@ module.exports = function(passport) {
         });
     });
 
-    /* GET all preferences of an idea */
+    /* GET all preferences for an idea */
     router.get('/preferences', isAuthenticated, function(req, res) {
         var title = req.query.title;
 
         startup.getPreferences(title, function(result) {
             res.send(result);
         })
+    });
+
+    /* GET all preferences for all ideas */
+    router.get('/all-preferences', isAuthenticated, function(req, res) {
+        startup.getAllPreferences(function(result) {
+            res.send(result);
+        });
     });
     
     return router;

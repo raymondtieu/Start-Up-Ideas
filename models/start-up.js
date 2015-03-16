@@ -218,6 +218,19 @@ module.exports = {
 
             callback({success: true, preferences: preferences});
         });
+    },
+
+    /* Get all preferences for all ideas */
+    getAllPreferences: function(callback) {
+        models.Preference.find({}, function(err, preferences) {
+            if (err) {
+                console.log("Error in getAllPreferences: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+
+            callback({success: true, preferences: preferences});
+        });
     }
 }
 
