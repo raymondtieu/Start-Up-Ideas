@@ -69,21 +69,6 @@ module.exports = function(passport) {
     /* GET the page for an idea */
     router.get('/idea=:id', isAuthenticated, function(req, res) {
         res.render('idea');
-        /*
-        var id = req.params.id;
-
-        startup.getIdea(id, function(idea_result) {
-            if (idea_result.success) {
-                startup.getPreference(id, function(pref_result){
-                    if (pref_result.success) {
-                        res.render('idea', {user: req.user, 
-                            idea: idea_result.idea,
-                            preference: pref_result.preference});
-                    }
-                });
-            }            
-        });
-        */
     });
 
     /* GET an idea given an id  */
@@ -119,8 +104,8 @@ module.exports = function(passport) {
         
     });
 
-    /* Handle update idea POST */
-    router.post('/idea=:id/update', function(req,res) {
+    /* Handle update idea PUT */
+    router.put('/idea=:id/update', function(req,res) {
         var id = req.params.id;
 
         title = req.query.title;

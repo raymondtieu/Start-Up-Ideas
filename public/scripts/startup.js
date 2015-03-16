@@ -15,7 +15,8 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
 
     $scope.open = function() {
         openModal($scope, $modal, $http, '/new-idea', 
-            {title: '', description: '', industry: 'Health'});
+            {title: '', description: '', industry: 'Health'},
+            "POST");
     }
 });
 
@@ -37,11 +38,18 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
     });
 
     $scope.open = function() {
-        openModal($scope, $modal, $http, window.location.href + '/update', $scope.idea);
+        openModal($scope, $modal, $http, window.location.href + '/update', 
+            $scope.idea, "PUT");
+    }
+
+    $scope.delete = function() {
+        $http({
+            url: ''
+        })
     }
 });
 
-function openModal($scope, $modal, $http, url, idea) {
+function openModal($scope, $modal, $http, url, idea, method) {
 
     $modal.open({
     templateUrl: 'idea-modal.jade',
@@ -59,7 +67,7 @@ function openModal($scope, $modal, $http, url, idea) {
             } else {
                 $http({
                     url: url,
-                    method: "POST",
+                    method: method,
                     params: {title: $scope.title,
                         description: $scope.description,
                         industry: $scope.industry
