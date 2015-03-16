@@ -82,7 +82,7 @@ module.exports = {
     },
 
     /* Update an existing idea given an id and new values */
-    updateIdea: function(id, body, callback) {
+    updateIdea: function(id, title, description, industry, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in updateIdea: " + err);
@@ -90,18 +90,14 @@ module.exports = {
                 return;
             }
 
-            var title = body.title;
-            var description = body.description;
-            var industry = body.industry;
-
             models.Idea.findOne({'title': title}, function(err, eidea) {
                 if (err) {
                     console.log("Error in updateIdea: " + err);
                     callback({success: false, errmsg: err});
                     return;
                 }
-
-                if (eidea) {
+                
+                if (eidea && idea.title != eidea.title) {
                     console.log("Idea already exists with title: " + title);
                 
                     callback({success: false, 

@@ -1,23 +1,41 @@
 extends layout
 
 block content
-    h4 #{idea.title}
-    p #{idea.poster}
-    p #{idea.description}
-    p #{idea.industry}
-    p #{preference}
-    
-    if (user.username == idea.poster)
-        p
-            a(href='/idea=#{idea._id}/update') Update Idea
-        p
-            a(href='/idea=#{idea._id}/delete') Delete Idea
-    else
-        p
-            a(href='/idea=#{idea._id}/like') Like
-        p
-            a(href='/idea=#{idea._id}/dislike') Dislike
-    p
-        a(href='/signout') Sign Out
+    div(ng-controller="IdeaCtrl")
+        h4 {{ idea.title }}
+        p {{ idea.poster }}
+        p {{ idea.description }}
+        p {{ idea.industry }}
+        p {{ preference }}
+        
+        div(ng-if="user.username == idea.poster")
+            button.btn.btn-primary(ng-click="open()") Update Idea
+            button.btn.btn-primary(ng-click="delete()") Delete Idea
 
+        div(ng-if="user.username != idea.poster")
+            button.btn.btn-primary(ng-click="like()") Like
+            button.btn.btn-primary(ng-click="dislike()") Dislike
+        p
+            a(href='/signout') Sign Out
+
+        <!-- A dialog for an existing idea form -->
+        script(type="text/ng-template" id="idea-modal.jade")
+            div.modal-header
+                h3 Update Idea
+           
+            div.modal-body
+                label Title
+                input(type="text", placeholder="Title", required, autofocus, ng-model="title")
+                br
+                p Description   
+                textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
+                br
+                label Industry
+                select(ng-model="industry" ng-options="i for i in industries")
+
+            div.modal-footer
+                button.btn.btn-warning(ng-click="cancel()") Cancel
+                button.btn.btn-primary(ng-click="submit()") Submit
+
+            p {{ errmsg }}
         

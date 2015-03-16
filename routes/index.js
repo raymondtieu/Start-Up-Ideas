@@ -54,14 +54,6 @@ module.exports = function(passport) {
         })
     });
 
-    /*  GET new start-up idea page */
-    router.get('/new-idea', isAuthenticated, function(req, res) {
-        var ind = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
-
-        res.render('new-idea', {action: '/new-idea', industries: ind, 
-            message: req.flash('new-idea-err')});
-    });
-
     /* Handle idea POST */
     router.post('/new-idea', function(req, res) {
         title = req.query.title;
@@ -76,7 +68,10 @@ module.exports = function(passport) {
 
     /* GET the page for an idea */
     router.get('/idea=:id', isAuthenticated, function(req, res) {
+        res.render('idea');
+        /*
         var id = req.params.id;
+
         startup.getIdea(id, function(idea_result) {
             if (idea_result.success) {
                 startup.getPreference(id, function(pref_result){
@@ -88,7 +83,25 @@ module.exports = function(passport) {
                 });
             }            
         });
+        */
     });
+
+    /* GET an idea given an id  */
+    router.get('/idea', isAuthenticated, function(req, res) {
+        var id = req.query.id;
+
+        startup.getIdea(id, function(idea_result) {
+            if (idea_result.success) {
+                startup.getPreference(id, function(pref_result){
+                    if (pref_result.success) {
+                        res.send({user: req.user, 
+                            idea: idea_result.idea,
+                            preference: pref_result.preference});
+                    }
+                });
+            }            
+        });
+    })
 
     /* GET a form to update an existing idea */
     router.get('/idea=:id/update', isAuthenticated, function(req, res) {
@@ -109,14 +122,13 @@ module.exports = function(passport) {
     /* Handle update idea POST */
     router.post('/idea=:id/update', function(req,res) {
         var id = req.params.id;
-        startup.updateIdea(id, req.body, function(result) {
-            if (result.success) {
-                res.redirect('/idea=' + id);
-            } else {
-                console.log(result.errmsg);
-                req.flash('update-idea-err', result.errmsg);
-                res.redirect('/idea=' + id + '/update');
-            }
+
+        title = req.query.title;
+        description = req.query.description;
+        industry = req.query.industry;
+
+        startup.updateIdea(id, title, description, industry, function(result) {
+            res.send(result);
         });
     });
 

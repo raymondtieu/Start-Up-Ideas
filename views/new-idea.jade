@@ -1,21 +1,19 @@
-div.modal-header
-    h3 Propose New Idea
+script(type="text/ng-template" id="idea-modal.jade")
+    div.modal-header
+        h3 Propose New Idea
+   
+    div.modal-body
+        label Title
+        input(type="text", placeholder="Title", required, autofocus, ng-model="title")
+        br
+        p Description   
+        textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
+        br
+        label Industry
+        select(ng-model="industry" ng-options="i for i in industries")
 
-    form(ng-submit="newIdea()")
-        div.modal-body
-            label Title
-            input(type="text" name="title" placeholder="Title", required, value=title)
-            br
-            p Description
-            textarea(cols="40" rows="5" name="description" placeholder="Description", required) #{description}
-            br
-            label Industry
-            select(name="industry")
-                option(value="Health") Health
-                option(value="Technology") Technology
-        div.modal-footer
-            button.btn.btn-warning(ng-click="cancel()") Cancel
-            input.btn.btn-primary(type="submit" value="Submit")
+    div.modal-footer
+        button.btn.btn-warning(ng-click="cancel()") Cancel
+        button.btn.btn-primary(ng-click="submit()") Submit
 
-    if message
-        p #{message}
+    p {{ errmsg }}
