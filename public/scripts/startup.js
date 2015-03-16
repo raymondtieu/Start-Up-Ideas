@@ -117,8 +117,12 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
             $scope.industry = idea.industry;
 
             $scope.submit = function() {
-                if (!$scope.title || !$scope.description || !$scope.industry) {
-                    $scope.errmsg = "Please fill out all fields"
+                titleRegex = /^[a-zA-Z\ ]{5,30}$/;
+
+                if (!($scope.title.match(titleRegex))) {
+                    $scope.errmsg = "Enter a title with only letter characters or spaces";
+                } else if (!$scope.title || !$scope.description || !$scope.industry) {
+                    $scope.errmsg = "Please fill out all fields";
                 } else {
                     $http({
                         url: url,
