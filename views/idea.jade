@@ -25,24 +25,4 @@ block content
         p
             a(href='/signout') Sign Out
 
-        <!-- A dialog for an existing idea form -->
-        script(type="text/ng-template" id="idea-modal.jade")
-            div.modal-header
-                h3 Update Idea
-           
-            div.modal-body
-                label Title
-                input(type="text", placeholder="Title", required, autofocus, ng-model="title")
-                br
-                p Description   
-                textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
-                br
-                label Industry
-                select(ng-model="industry" ng-options="i for i in industries")
-
-            div.modal-footer
-                button.btn.btn-warning(ng-click="cancel()") Cancel
-                button.btn.btn-primary(ng-click="submit()") Submit
-
-            p {{ errmsg }}
         

@@ -4,7 +4,7 @@ module.exports = {
 
     /* Save a new idea to the database */
     postIdea : function(username, title, description, industry, callback) {
-        models.Idea.findOne({'title': title}, function(err, idea) {
+        models.Idea.findOne({'title': new RegExp(title, "i")}, function(err, idea) {
             if (err) {
                 console.log("Error in postIdea: " + err);
                 callback({success: false, errmsg: err});
