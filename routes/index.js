@@ -77,7 +77,7 @@ module.exports = function(passport) {
 
         startup.getIdea(id, function(idea_result) {
             if (idea_result.success) {
-                startup.getPreference(id, function(pref_result){
+                startup.getSumPreference(id, function(pref_result){
                     if (pref_result.success) {
                         res.send({user: req.user, 
                             idea: idea_result.idea,
@@ -125,39 +125,47 @@ module.exports = function(passport) {
     });
 
     /* Handle an idea DELETE */
-    router.get('/idea=:id/delete', isAuthenticated, function(req, res) {
+    router.delete('/idea=:id/delete', isAuthenticated, function(req, res) {
         var id = req.params.id;
         startup.deleteIdea(id, function(result) {
             if (result.success) {
-                res.redirect('/home');
+                res.send(result);
             }
         });
     });
 
-    /* GET idea like */
-    router.get('/idea=:id/like', isAuthenticated, function(req, res) {
+    /* Handle like idea POST */
+    router.post('/idea=:id/like', isAuthenticated, function(req, res) {
         var id = req.params.id;
+
+        console.log(id);
+
         startup.addPreference(id, req.user.username, 1, function(result) {
             if (result.success) {
-                res.redirect('/idea=' + id);
-            } else {
-                req.flash('idea-like-err', result.errmsg);
-                res.redirect('/idea=' + id);
+                console.log(result);
+                res.send(result);
             }
         });
     });
 
-    /* GET idea dislike */
-    router.get('/idea=:id/dislike', isAuthenticated, function(req, res) {
+    /* Handle dislike idea POST */
+    router.post('/idea=:id/dislike', isAuthenticated, function(req, res) {
         var id = req.params.id;
         startup.addPreference(id, req.user.username, -1, function(result) {
             if (result.success) {
-                res.redirect('/idea=' + id);
-            } else {
-                req.flash('idea-like-err', result.errmsg);
-                res.redirect('/idea=' + id);
+                res.send(result);
             }
         });
+    });
+
+    /* GET preference given by user for idea */
+    router.get('/preference', isAuthenticated, function(req, res) {
+        var title = req.query.title;
+        var username = req.query.username;
+
+        startup.getPreference(username, title, function(result) {
+            res.send(result);
+        })
     });
     
     return router;

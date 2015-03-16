@@ -154,10 +154,10 @@ module.exports = {
     },
 
     /* Get the sum of all preferences of an idea given an id */
-    getPreference: function(id, callback) {
+    getSumPreference: function(id, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
-                console.log("Error in getPreference: " + err);
+                console.log("Error in getSumPreference: " + err);
                 callback({success: false, errmsg: err});
                 return;
             }
@@ -215,6 +215,8 @@ module.exports = {
                         newPref.title = idea.title;
                         newPref.preference = p;
 
+                        console.log(username, idea.title);
+
                         newPref.save(function(err) {
                             if (err){
                                 console.log('Error in saving new preference: ' + err);  
@@ -233,8 +235,22 @@ module.exports = {
     },
 
     /* Get the preference a user gave to an idea */
+    getPreference: function(username, title, callback) {
+        models.Preference.findOne({title: title, username: username}, function(err, preference) {
+            if (err) {
+                console.log("Error in getPreference: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
 
-    /* Update the preference a user gave to an idea */
+            if (preference) {
+                callback({success: false, preference: preference});
+                return;
+            }
+
+            callback({success: true});
+        });
+    }
 }
 
 

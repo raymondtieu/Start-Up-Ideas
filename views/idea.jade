@@ -7,14 +7,19 @@ block content
         p {{ idea.description }}
         p {{ idea.industry }}
         p {{ preference }}
-        
+    
         div(ng-if="user.username == idea.poster")
             button.btn.btn-primary(ng-click="open()") Update Idea
             button.btn.btn-primary(ng-click="delete()") Delete Idea
 
         div(ng-if="user.username != idea.poster")
-            button.btn.btn-primary(ng-click="like()") Like
-            button.btn.btn-primary(ng-click="dislike()") Dislike
+            div(ng-if="give_preference")
+                button.btn.btn-primary(ng-click="like()") Like
+                button.btn.btn-primary(ng-click="dislike()") Dislike
+
+            div(ng-if="!(give_preference)")
+                p {{ pref_msg }}
+
         p
             a(href='/signout') Sign Out
 
