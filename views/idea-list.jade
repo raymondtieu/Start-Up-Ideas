@@ -5,14 +5,23 @@ block content
 
         h4 All Ideas
 
+        p Ordered by : {{ orderByField }}
+        p Reversed : {{ sortReverse }}
+
         table.table.table-bordered
             tr
-                th Title
-                th Author
-                th Date Posted
-                th Likes
-                th Dislikes
-            tr(ng-repeat="idea in ideas | orderBy: 'title'")
+                th 
+                    a(ng-click="changeSort('title')") Title
+                th 
+                    a(ng-click="changeSort('author')") Author
+                th 
+                    a(ng-click="changeSort('posted')") Date Posted
+                th 
+                    a(ng-click="changeSort('likes')") Likes
+                th 
+                    a(ng-click="changeSort('dislikes')") Dislikes
+
+            tr(ng-repeat="idea in ideas | orderBy: orderByField : sortReverse")
                 td
                     a(href='/idea={{ idea._id }}') {{ idea.title }}
                 td {{ idea.poster }}

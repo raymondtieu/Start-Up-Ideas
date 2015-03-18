@@ -120,6 +120,8 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 /* Controller for the list of all ideas */
 app.controller('ListCtrl', function($scope, $modal, $http) {
     $scope.ideas = [];
+    $scope.orderByField = 'posted';
+    $scope.sortReverse = false;
 
     // get a list of all ideas
     $http({
@@ -155,6 +157,19 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
                 $result.idea.dislikes = 0;
                 $scope.ideas.push($result.idea);
             });
+    }
+
+    // handle sorting of ideas by different values when clicked
+    $scope.changeSort = function(value) {
+        if (value == $scope.orderByField)
+            $scope.sortReverse = !$scope.sortReverse;
+        else
+            if (value == 'likes' || value == 'dislikes' || value == 'posted')
+                $scope.sortReverse = true;
+            else 
+                $scope.sortReverse = false;
+
+        $scope.orderByField = value;
     }
 });
 
