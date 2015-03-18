@@ -20,8 +20,7 @@ block content
                 td {{ idea.likes }}
                 td {{ idea.dislikes }}
                 
-        p
-            a(href='/new-idea') Propose a new idea
+        button.btn.btn-primary(ng-click="open()") Propose a new idea
 
         p
             a(href='/signout') Sign Out

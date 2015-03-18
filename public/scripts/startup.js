@@ -16,7 +16,7 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
     });
 
     // default values for new idea form
-    var idea = {title: '', description: '', industry: 'Health', keywords: ''}
+    var idea = {title: '', description: '', industry: 'Health', keywords: ''};
 
     // open modal when user wants to submit a new idea
     $scope.open = function() {
@@ -118,7 +118,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 
 
 /* Controller for the list of all ideas */
-app.controller('ListCtrl', function($scope, $http) {
+app.controller('ListCtrl', function($scope, $modal, $http) {
     $scope.ideas = [];
 
     // get a list of all ideas
@@ -142,6 +142,20 @@ app.controller('ListCtrl', function($scope, $http) {
             }
         });
     });
+
+
+    // default values for new idea form
+    var idea = {title: '', description: '', industry: 'Health', keywords: ''};
+
+    // open modal when user wants to submit a new idea
+    $scope.open = function() {
+        openModal($scope, $modal, $http, '/new-idea', idea, "POST", 
+            function($result) {
+                $result.idea.likes = 0;
+                $result.idea.dislikes = 0;
+                $scope.ideas.push($result.idea);
+            });
+    }
 });
 
 
