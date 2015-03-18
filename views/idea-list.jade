@@ -12,7 +12,7 @@ block content
                 th Date Posted
                 th Likes
                 th Dislikes
-            tr(ng-repeat="idea in ideas")
+            tr(ng-repeat="idea in ideas | orderBy: 'title'")
                 td
                     a(href='/idea={{ idea._id }}') {{ idea.title }}
                 td {{ idea.poster }}
