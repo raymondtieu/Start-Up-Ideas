@@ -1,31 +1,6 @@
 var app = angular.module('startUp', ['ui.bootstrap']);
 
-/* Controller for the home page */
-app.controller('HomeCtrl', function($scope, $modal, $http) {
-    $scope.ideas = [];
-    $scope.errmsg = '';
-    
-    // get list of all ideas by this user
-    $http({
-        url: '/my-ideas',
-        method: "GET",
-    }).success(function($result) {
-        if ($result.success) {
-            $scope.ideas = $result.ideas;
-        }
-    });
-
-    // default values for new idea form
-    var idea = {title: '', description: '', industry: 'Health', keywords: ''};
-
-    // open modal when user wants to submit a new idea
-    $scope.open = function() {
-        openModal($scope, $modal, $http, '/new-idea', idea, "POST", 
-            function($result) {
-                $scope.ideas.push($result.idea);
-            });
-    }
-});
+var industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
 
 /* Controller for a single idea */
 app.controller('IdeaCtrl', function($scope, $modal, $http) {
@@ -120,7 +95,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 });
 
 
-/* Controller for the list of all ideas */
+/* Controller for the home page */
 app.controller('ListCtrl', function($scope, $modal, $http) {
     $scope.ideas = [];
     $scope.user = null;
@@ -132,7 +107,8 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
     // options for which ideas to display
     $scope.viewOptions = ['All', 'My Ideas', 'Best k Ideas', 'Graph'];
     $scope.viewOption = $scope.viewOptions[0];
-    $scope.filterOption = '';
+    $scope.industryOptions = ['All'].concat(industries);
+    $scope.industryOption = $scope.industryOptions[0];
 
     // get current user
     getUser($http, function(result) {
@@ -164,7 +140,7 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
 
 
     // default values for new idea form
-    var idea = {title: '', description: '', industry: 'Health', keywords: ''};
+    var idea = {title: '', description: '', industry: industries[0], keywords: ''};
 
     // open modal when user wants to submit a new idea
     $scope.open = function() {
@@ -191,12 +167,26 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
 
     // custom filter function to handle ideas to be displayed
     $scope.myFilter = function(idea) {
+        var filter = false;
+        var industry = false;
+        var keyword = false;
+
+        // decide whether to display all ideas, or only the current user's
         if ($scope.viewOption == $scope.viewOptions[0])
-            return true;
+            filter = true;
         else if ($scope.viewOption == $scope.viewOptions[1])
-            return idea.email == $scope.user.email;
+            filter = idea.email == $scope.user.email;
+        
+        else    // phase 2
+            filter = true;
+
+        // decide which ideas to display given an industry
+        if ($scope.industryOption == $scope.industryOptions[0])
+            industry = true;
         else
-            return true;
+            industry = idea.industry == $scope.industryOption;
+
+        return filter && industry;
     }
 });
 
@@ -209,7 +199,7 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
         windowClass: 'modal',
         controller: function($scope, $modalInstance, $log) {
             // available industries to choose from 
-            $scope.industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
+            $scope.industries = industries;
             $scope.title = idea.title;
             $scope.description = idea.description;
             $scope.industry = idea.industry;
@@ -265,7 +255,6 @@ function getUser($http, callback) {
         url: '/user',
         method: "GET",
     }).success(function(result) {
-        console.log(result.user);
         callback(result.user);
     });
 }
