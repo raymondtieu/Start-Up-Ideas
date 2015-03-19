@@ -186,7 +186,16 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
         else
             industry = idea.industry == $scope.industryOption;
 
-        return filter && industry;
+        // decide which ideas to display given keywords
+        keywordRegex = new RegExp($scope.keywordSearch, "i");
+
+        if (!$scope.keywordSearch)
+            keyword = true;
+        else if (idea.keywords.match(keywordRegex)) {
+            keyword = true;
+        }
+
+        return filter && industry && keyword;
     }
 });
 
