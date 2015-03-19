@@ -140,6 +140,7 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
                     function(result) {
                         $scope.ideas[i].likes = result.likes
                         $scope.ideas[i].dislikes = result.dislikes
+                        $scope.ideas[i].posted = convertDate($scope.ideas[i].posted);
                     });
             }
         });
@@ -214,6 +215,7 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
                     }).success(function($result) {
                         if ($result.success) {
                             console.log($result);
+                            $result.idea.posted = convertDate($result.idea.posted);
                             $modalInstance.dismiss('cancel');
                             callback($result);
                         } else {
@@ -272,5 +274,11 @@ function getPreferences(title, p, email, callback) {
     callback({likes: likes, dislikes: dislikes, gave_preference: g, 
         msg: msg});
     return;
+}
+
+/* Convert an ISO date to a more readable format */
+function convertDate(date) {
+    var d = new Date(date);
+    return d.toString();
 }
 
