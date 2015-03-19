@@ -36,6 +36,11 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 
     var id = window.location.href.split('=')[1];
 
+    // get current user
+    getUser($http, function(result) {
+        $scope.user = result;
+    });
+
     // get details about this idea
     $http({
         url: '/idea',
@@ -44,7 +49,6 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
     }).success(function(result) {
         if (result.success) {
             $scope.idea = result.idea;
-            $scope.user = result.user;
 
             // get all preferences for this idea
             $http({
@@ -65,7 +69,6 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
                 }
             });
         }
-
     });
 
     // open modal when user wants to update this idea
@@ -97,7 +100,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             $scope.pref_msg = "You liked this idea"
 
             /* temporary */
-            $scope.idea.like += 1;
+            $scope.idea.likes += 1;
         })
     }
 
@@ -111,7 +114,7 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             $scope.pref_msg = "You disliked this idea"
 
             /* temporary */
-            $scope.idea.dislike -= 1;
+            $scope.idea.dislikes -= 1;
         })
     }
 });
@@ -120,8 +123,21 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
 /* Controller for the list of all ideas */
 app.controller('ListCtrl', function($scope, $modal, $http) {
     $scope.ideas = [];
+    $scope.user = null;
+
+    // default sorting values - show the newest ideas first
     $scope.orderByField = 'posted';
-    $scope.sortReverse = false;
+    $scope.sortReverse = true;
+
+    // options for which ideas to display
+    $scope.viewOptions = ['All', 'My Ideas', 'Best k Ideas', 'Graph'];
+    $scope.viewOption = $scope.viewOptions[0];
+    $scope.filterOption = '';
+
+    // get current user
+    getUser($http, function(result) {
+        $scope.user = result;
+    });
 
     // get a list of all ideas
     $http({
@@ -171,6 +187,16 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
                 $scope.sortReverse = false;
 
         $scope.orderByField = value;
+    }
+
+    // custom filter function to handle ideas to be displayed
+    $scope.myFilter = function(idea) {
+        if ($scope.viewOption == $scope.viewOptions[0])
+            return true;
+        else if ($scope.viewOption == $scope.viewOptions[1])
+            return idea.email == $scope.user.email;
+        else
+            return true;
     }
 });
 
@@ -232,6 +258,17 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
     });
 }
 
+
+/* Get the current user */
+function getUser($http, callback) {
+    $http({
+        url: '/user',
+        method: "GET",
+    }).success(function(result) {
+        console.log(result.user);
+        callback(result.user);
+    });
+}
 
 /* Trim and replace all whitespace inbetween characters with a single 
    whitespace character given a string */

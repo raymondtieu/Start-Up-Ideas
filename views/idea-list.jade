@@ -2,18 +2,26 @@ extends layout
 
 block content
     div(ng-controller="ListCtrl")
+        h4 Name: {{ user.name }}
+        h4 Email: {{ user.email }}
+        h4 password: {{ user.password }}
 
         h4 All Ideas
 
         p Ordered by : {{ orderByField }}
         p Reversed : {{ sortReverse }}
 
+        label Select Ideas to View: 
+        select(ng-model="viewOption", ng-options="i for i in viewOptions")
+
+        button.btn.btn-primary(ng-click="open()") Propose a new idea
+
         table.table.table-bordered
             tr
                 th 
                     a(ng-click="changeSort('title')") Title
                 th 
-                    a(ng-click="changeSort('author')") Author
+                    a(ng-click="changeSort('poster')") Author
                 th 
                     a(ng-click="changeSort('posted')") Date Posted
                 th 
@@ -21,7 +29,7 @@ block content
                 th 
                     a(ng-click="changeSort('dislikes')") Dislikes
 
-            tr(ng-repeat="idea in ideas | orderBy: orderByField : sortReverse")
+            tr(ng-repeat="idea in ideas | orderBy:orderByField:sortReverse | filter: myFilter")
                 td
                     a(href='/idea={{ idea._id }}') {{ idea.title }}
                 td {{ idea.poster }}
@@ -29,9 +37,10 @@ block content
                 td {{ idea.likes }}
                 td {{ idea.dislikes }}
                 
-        button.btn.btn-primary(ng-click="open()") Propose a new idea
+        
 
         p
             a(href='/signout') Sign Out
+
 
         

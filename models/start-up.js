@@ -71,7 +71,7 @@ module.exports = {
     },
 
     /* Return an idea given an id */
-    getIdea : function(user, id, callback) {
+    getIdea : function(id, callback) {
         models.Idea.findById(id, function(err, idea) {
             if (err) {
                 console.log("Error in getIdea: " + err);
@@ -79,7 +79,7 @@ module.exports = {
                 return;
             }
 
-            callback({success: true, user: user, idea: idea});
+            callback({success: true, idea: idea});
         });
     },
 

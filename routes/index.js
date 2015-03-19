@@ -44,13 +44,7 @@ module.exports = function(passport) {
 
     /* GET home page */
     router.get('/home', isAuthenticated, function(req, res) {
-        res.render('home', {user: req.user});
-    });
-
-    /* GET page with list of all ideas */
-    router.get('/all', isAuthenticated, function(req, res) {
         res.render('idea-list');
-        
     });
 
     /* GET all ideas in database */
@@ -89,7 +83,7 @@ module.exports = function(passport) {
     router.get('/idea', isAuthenticated, function(req, res) {
         var id = req.query.id;
 
-        startup.getIdea(req.user, id, function(result) {
+        startup.getIdea(id, function(result) {
             res.send(result);
         });
     })
@@ -155,6 +149,11 @@ module.exports = function(passport) {
         startup.getAllPreferences(function(result) {
             res.send(result);
         });
+    });
+
+    /* GET the current user */
+    router.get('/user', isAuthenticated, function(req, res) {
+        res.send({user: req.user});
     });
     
     return router;
