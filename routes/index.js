@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-
 var startup = require('../models/start-up');
 
 /* If the user is not authenticated, redirect to login page */
@@ -154,6 +153,11 @@ module.exports = function(passport) {
     /* GET the current user */
     router.get('/user', isAuthenticated, function(req, res) {
         res.send({user: req.user});
+    });
+
+
+    router.get('/graph', isAuthenticated, function(req, res) {
+        res.render('graph');
     });
     
     return router;

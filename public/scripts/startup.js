@@ -1,4 +1,4 @@
-var app = angular.module('startUp', ['ui.bootstrap']);
+var app = angular.module('startUp', ['ui.bootstrap', 'chart.js']);
 
 var industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
 
@@ -176,7 +176,6 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
             filter = true;
         else if ($scope.viewOption == $scope.viewOptions[1])
             filter = idea.email == $scope.user.email;
-        
         else    // phase 2
             filter = true;
 
@@ -199,6 +198,32 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
     }
 });
 
+/* Controller for the graph */
+app.controller('GraphCtrl', function($scope, $http) {
+    $scope.labels = industries;
+    $scope.series = ['Series A'];
+    $scope.data = [[0, 0, 0, 0, 0]];
+    $scope.ideas = [];
+
+    // get a list of all ideas
+    $http({
+        url: '/all-ideas',
+        method: "GET",
+    }).success(function(result) {
+        $scope.ideas = result.ideas;
+
+        // populate data for graph
+        for (var i = 0; i < $scope.ideas.length; i++) {
+            for (var j = 0; j < $scope.labels.length; j++) {
+                if ($scope.ideas[i].industry == $scope.labels[j]) {
+                    $scope.data[0][j]++;
+                    break;
+                }
+            }
+        }
+    });
+
+});
 
 /* Open a modal to handle a new or updating an idea */
 function openModal($scope, $modal, $http, url, idea, method, callback) {

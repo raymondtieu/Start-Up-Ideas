@@ -14,6 +14,10 @@ block content
         label Select Ideas to View: 
         select(ng-model="viewOption", ng-options="i for i in viewOptions")
 
+        br
+        a(href="/graph") View graph
+        br
+
         button.btn.btn-primary(ng-click="open()") Propose a new idea
         br
         label Filter by Industry: 
@@ -47,9 +51,6 @@ block content
                 td {{ idea.posted }}
                 td {{ idea.likes }}
                 td {{ idea.dislikes }}
-                
-        p
-            a(href='/signout') Sign Out
-
-
+    p
+        a(href='/signout') Sign Out
         
