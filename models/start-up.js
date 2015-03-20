@@ -188,8 +188,6 @@ module.exports = {
                         newPref.title = idea.title;
                         newPref.preference = p;
 
-                        console.log(email, idea.title);
-
                         newPref.save(function(err) {
                             if (err){
                                 console.log('Error in saving new preference: ' + err);  
@@ -197,7 +195,7 @@ module.exports = {
                             }
                             console.log('New preference added succesfully');    
                             
-                            callback({success: true, idea: newPref});
+                            callback({success: true, pref: newPref});
                         });
                     }
                 });
@@ -230,6 +228,41 @@ module.exports = {
             }
 
             callback({success: true, preferences: preferences});
+        });
+    },
+
+    /* Get ideas between the start and end dates */
+    getIdeasBetween: function(k, start, end, callback) {
+        models.Idea.find({posted: {$gte: new Date(start), $lte: new Date(end)}})
+            .exec(function (err, ideas) {
+                if (err) {
+                    console.log("Error in getIdeasBetween: " + err);
+                    callback({success: false, errmsg: err});
+                    return;
+                }
+
+               callback({success: true, ideas: ideas});
+
+            });
+    },
+
+
+    /* Get overall preference for an idea given a title */
+    getOverall: function(title, callback) {
+        models.Preference.aggregate([
+            {$match: {title: title}},
+            {$group: {
+                _id: "$title",
+                overall: {$sum: "$preference"}
+            }}
+        ]).exec(function(err, preference) {
+            if (err) {
+                console.log("Error in getOverall: " + err);
+                callback({success: false, errmsg: err});
+                return;
+            }
+            
+            callback({success:true, overall: preference});
         });
     }
 }

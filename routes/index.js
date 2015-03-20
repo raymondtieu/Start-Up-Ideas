@@ -155,9 +155,28 @@ module.exports = function(passport) {
         res.send({user: req.user});
     });
 
-    router.get('/calendar', isAuthenticated, function(req, res) {
-        res.render('k-ideas');
+    router.get('/k-best', isAuthenticated, function(req, res) {
+        res.render('k-best');
     });
+
+    router.get('/get-ideas-between', isAuthenticated, function(req, res) {
+        var k = req.query.k;
+        var start = req.query.start;
+        var end = req.query.end;
+
+        startup.getIdeasBetween(k, start, end, function(result) {
+            res.send(result);
+        });
+    });
+
+    router.get('/get-overall', isAuthenticated, function(req, res) {
+        var title = req.query.title;
+
+        startup.getOverall(title, function(result) {
+            res.send(result);
+        });
+    })
     
     return router;
 }
+

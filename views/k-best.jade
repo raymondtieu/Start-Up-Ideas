@@ -4,12 +4,12 @@ block content
     link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css")
     link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css")
     script(src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js')
-    script(src='scripts/k-ideas-controller.js')
+    script(src='scripts/k-best-controller.js')
 
-    div(ng-controller="KIdeasCtrl")
+    div(ng-controller="KBestCtrl")
 
-        label k =
-        input(type="text", placeholder="Enter a value for k", required, ng-model="value")
+        label Number of ideas: 
+        input(type="text", placeholder="Enter a number", required, ng-model="num")
         br
 
         label Starting Date
@@ -22,11 +22,16 @@ block content
             input.form-control(name="date" type="text" ng-model="enddate")
             span.input-group-addon.add-on.glyphicon.glyphicon-calendar
 
-        p {{mindate}}
-        p {{maxdate}}
+        p {{startdate}}
+        p {{enddate}}
         p {{errmsg}}
 
         button.btn.btn-primary(ng-click="findIdeas()") Find Ideas
+
+
+        h3 Ideas
+        ul(ng-repeat="i in ideas | orderBy: 'preference':true | limitTo: lim")
+            li {{ i.title }} - {{ i.posted }} - {{ i.preference }}
 
         script
             $(function() {$('.datepicker').datepicker({ format: 'yyyy-mm-dd' }); })
