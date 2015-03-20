@@ -154,6 +154,10 @@ module.exports = function(passport) {
     router.get('/user', isAuthenticated, function(req, res) {
         res.send({user: req.user});
     });
+
+    router.get('/calendar', isAuthenticated, function(req, res) {
+        res.render('k-ideas');
+    });
     
     return router;
 }

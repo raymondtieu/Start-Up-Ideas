@@ -15,12 +15,9 @@ block content
 
         h4 All Ideas
 
-        p Ordered by : {{ orderByField }}
-        p Reversed : {{ sortReverse }}
-
         label Select Ideas to View: 
         select(ng-model="viewOption", ng-options="i for i in viewOptions", ng-change="showGraph()")
-
+        br
         button.btn.btn-primary(ng-click="open()") Propose a new idea
         br
 
@@ -32,6 +29,9 @@ block content
 
             label Search by keyword: 
             input(ng-model="keywordSearch")
+
+            p Ordered by : {{ orderByField }}
+            p Reversed : {{ sortReverse }}
 
             br
             p Showing {{ filteredIdeas.length }} results

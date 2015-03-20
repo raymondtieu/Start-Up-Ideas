@@ -30,12 +30,14 @@ app.controller('TableCtrl', function($scope) {
         var view = $scope.$parent.viewOption;
         var options = $scope.$parent.viewOptions;
 
-        // decide whether to display all ideas, or only the current user's
+        // display all ideas
         if (view == options[0])
             filter = true;
+        // display only the current user's ideas
         else if (view == options[1])
             filter = idea.email == $scope.user.email;
-        else    // phase 2
+        // prompt for a k and dates
+        else if (view == options[2])
             filter = true;
 
         // decide which ideas to display given an industry
