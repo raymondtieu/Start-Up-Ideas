@@ -52,7 +52,6 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
                 $scope.idea.title = $result.idea.title;
                 $scope.idea.description = $result.idea.description;
                 $scope.idea.industry = $result.idea.industry;
-                $scope.idea.posted = convertDate($scope.idea.posted);
             });
     }
 

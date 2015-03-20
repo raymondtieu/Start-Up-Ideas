@@ -12,10 +12,10 @@ var dbConfig = require('./db');
 
 // development
 // connect to db
-//mongoose.connect(dbConfig.url);
+mongoose.connect(dbConfig.url);
 
 
-// Heroku
+/* Production */
 var uriUtil = require('mongodb-uri');
  
 /* 
@@ -34,16 +34,17 @@ var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000
  */
 var mongodbUri = 'mongodb://user:pass@host:port/db';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+
+//mongoose.connect(process.env.MONGOLAB_URI || mongodbUri);
+//var conn = mongoose.connection;             
  
-//mongoose.connect(mongooseUri, options);
-mongoose.connect(process.env.MONGOLAB_URI || mongodbUri);
-var conn = mongoose.connection;             
+//conn.on('error', console.error.bind(console, 'connection error:'));  
  
-conn.on('error', console.error.bind(console, 'connection error:'));  
- 
-conn.once('open', function() {
+//conn.once('open', function() {
   // Wait for the database connection to establish, then start the app.                         
-});
+//});
+
+/**************/
 
 
 var app = express();
