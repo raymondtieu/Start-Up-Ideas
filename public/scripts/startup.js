@@ -1,5 +1,7 @@
 var app = angular.module('startUp', ['ui.bootstrap']);
 
+/* Functions used across multiple controllers */
+
 var industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
 
 /* Open a modal to handle a new or updating an idea */
