@@ -1,6 +1,8 @@
 extends layout
 
 block content
+    script(src='scripts/home-controller.js')
+
     div(ng-controller="ListCtrl")
         h4 Name: {{ user.name }}
         h4 Email: {{ user.email }}
