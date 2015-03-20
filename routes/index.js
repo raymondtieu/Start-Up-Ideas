@@ -43,7 +43,7 @@ module.exports = function(passport) {
 
     /* GET home page */
     router.get('/home', isAuthenticated, function(req, res) {
-        res.render('idea-list');
+        res.render('home');
     });
 
     /* GET all ideas in database */
@@ -153,11 +153,6 @@ module.exports = function(passport) {
     /* GET the current user */
     router.get('/user', isAuthenticated, function(req, res) {
         res.send({user: req.user});
-    });
-
-
-    router.get('/graph', isAuthenticated, function(req, res) {
-        res.render('graph');
     });
     
     return router;

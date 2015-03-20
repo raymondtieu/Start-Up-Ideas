@@ -1,0 +1,68 @@
+extends layout
+
+block content
+    script(src='scripts/Chart.min.js')
+    script(src='scripts/angular-chart.js')
+
+    script(src='scripts/home-controller.js')
+    script(src='scripts/table-controller.js')
+    script(src='scripts/graph-controller.js')
+
+    div(ng-controller="HomeCtrl")
+        h4 Name: {{ user.name }}
+        h4 Email: {{ user.email }}
+        h4 password: {{ user.password }}
+
+        h4 All Ideas
+
+        p Ordered by : {{ orderByField }}
+        p Reversed : {{ sortReverse }}
+
+        label Select Ideas to View: 
+        select(ng-model="viewOption", ng-options="i for i in viewOptions", ng-change="showGraph()")
+
+        button.btn.btn-primary(ng-click="open()") Propose a new idea
+        br
+
+        div(ng-controller="TableCtrl" ng-show="viewOption!='Graph'")   
+            label Filter by Industry: 
+            select(ng-model="industryOption", ng-options="i for i in industryOptions")
+
+            br
+
+            label Search by keyword: 
+            input(ng-model="keywordSearch")
+
+            br
+            p Showing {{ filteredIdeas.length }} results
+            table.table.table-bordered
+                tr
+                    th 
+                        a(ng-click="changeSort('title')") Title
+                    th
+                        a(ng-click="changeSort('industry')") Industry
+                    th 
+                        a(ng-click="changeSort('poster')") Author
+                    th 
+                        a(ng-click="changeSort('posted')") Date Posted
+                    th 
+                        a(ng-click="changeSort('likes')") Likes
+                    th 
+                        a(ng-click="changeSort('dislikes')") Dislikes
+
+                tr(ng-repeat="idea in filteredIdeas = ($parent.ideas | orderBy:orderByField:sortReverse | filter: myFilter)")
+                    td
+                        a(href='/idea={{ idea._id }}') {{ idea.title }}
+                    td {{ idea.industry }}
+                    td {{ idea.poster }}
+                    td {{ idea.posted }}
+                    td {{ idea.likes }}
+                    td {{ idea.dislikes }}
+
+        div(ng-controller="GraphCtrl" ng-show="viewOption=='Graph'")
+            h2 Distribution of Ideas by Industry
+            canvas(id="bar" class="chart chart-bar" data="data" labels="labels")
+
+    p
+        a(href='/signout') Sign Out
+        

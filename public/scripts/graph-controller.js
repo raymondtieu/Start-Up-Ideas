@@ -1,25 +1,17 @@
-var app = angular.module('startUp', ['chart.js']);
-
-var industries = ['Health', 'Technology', 'Education', 'Finance', 'Travel'];
+var app = angular.module('startUp');
 
 /* Controller for the graph */
 app.controller('GraphCtrl', function($scope, $http) {
     $scope.labels = industries;
     $scope.series = ['Series A'];
     $scope.data = [[0, 0, 0, 0, 0]];
-    $scope.ideas = [];
 
-    // get a list of all ideas
-    $http({
-        url: '/all-ideas',
-        method: "GET",
-    }).success(function(result) {
-        $scope.ideas = result.ideas;
-
-        // populate data for graph
-        for (var i = 0; i < $scope.ideas.length; i++) {
+    // populate data for graph
+    $scope.$on("loadGraph", function(event, args) {
+        $scope.data = [[0, 0, 0, 0, 0]];
+        for (var i = 0; i < args.ideas.length; i++) {
             for (var j = 0; j < $scope.labels.length; j++) {
-                if ($scope.ideas[i].industry == $scope.labels[j]) {
+                if (args.ideas[i].industry == $scope.labels[j]) {
                     $scope.data[0][j]++;
                     break;
                 }
@@ -27,4 +19,13 @@ app.controller('GraphCtrl', function($scope, $http) {
         }
     });
 
+    // update the graph when a new idea is submitted
+    $scope.$on("updateGraph", function(event, args) {
+        for (var j = 0; j < $scope.labels.length; j++) {
+            if (args.idea.industry == $scope.labels[j]) {
+                $scope.data[0][j]++;
+                break;
+            }
+        }
+    });
 });
