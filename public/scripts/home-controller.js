@@ -27,7 +27,7 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
             method: "GET"
         }).success(function(result) {
             for (var i = 0; i < $scope.ideas.length; i++) {
-                getPreferences($scope.ideas[i].title, result.preferences, "",
+                getPreferences($scope.ideas[i]._id, result.preferences, "",
                     function(result) {
                         $scope.ideas[i].likes = result.likes
                         $scope.ideas[i].dislikes = result.dislikes

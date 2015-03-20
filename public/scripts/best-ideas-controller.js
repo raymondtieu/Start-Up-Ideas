@@ -1,6 +1,6 @@
 var app = angular.module('startUp', []);
 
-app.controller('KBestCtrl', function($scope, $http) {
+app.controller('BestIdeasCtrl', function($scope, $http) {
     $scope.errmsg = '';
     $scope.lim = 0;
 
@@ -35,9 +35,8 @@ app.controller('KBestCtrl', function($scope, $http) {
                         $http({
                             url: '/get-overall',
                             method: "GET",
-                            params: {title: $scope.ideas[i].title}
+                            params: {id: $scope.ideas[i]._id}
                         }).success(function(result){
-                            console.log(result);
                             if (result.overall.length == 0)
                                 $scope.ideas[j].preference = 0;
                             else

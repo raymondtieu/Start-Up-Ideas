@@ -136,9 +136,9 @@ module.exports = function(passport) {
 
     /* GET all preferences for an idea */
     router.get('/preferences', isAuthenticated, function(req, res) {
-        var title = req.query.title;
+        var id = req.query.id;
 
-        startup.getPreferences(title, function(result) {
+        startup.getPreferences(id, function(result) {
             res.send(result);
         })
     });
@@ -155,8 +155,8 @@ module.exports = function(passport) {
         res.send({user: req.user});
     });
 
-    router.get('/k-best', isAuthenticated, function(req, res) {
-        res.render('k-best');
+    router.get('/best-ideas', isAuthenticated, function(req, res) {
+        res.render('best-ideas');
     });
 
     router.get('/get-ideas-between', isAuthenticated, function(req, res) {
@@ -170,9 +170,9 @@ module.exports = function(passport) {
     });
 
     router.get('/get-overall', isAuthenticated, function(req, res) {
-        var title = req.query.title;
-
-        startup.getOverall(title, function(result) {
+        var id = req.query.id;
+        
+        startup.getOverall(id, function(result) {
             res.send(result);
         });
     })

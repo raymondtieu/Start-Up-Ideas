@@ -1,5 +1,7 @@
 var models = require('../models/schema');
 
+var mongoose = require('mongoose');
+
 module.exports = {
 
     /* Save a new idea to the database */
@@ -113,12 +115,13 @@ module.exports = {
                 idea.industry = industry;
                 idea.keywords = keywords;
 
+
                 idea.save(function(err) {
                     if (err){
                         console.log('Error in saving new idea: ' + err);  
                         throw err;  
                     }
-                    console.log('Idea updated succesfully');    
+                    console.log('Idea updated succesfully'); 
                     
                     callback({success: true, idea: idea});
                 });
@@ -136,7 +139,7 @@ module.exports = {
             }
 
             // also delete all preferences about idea given by other users
-            models.Preference.remove({title: idea.title}, function(err) {
+            models.Preference.remove({idea: idea._id}, function(err) {
                 if (err) {
                     console.log("Error in deleteIdea: " + err);
                     callback({success: false, errmsg: err});
@@ -167,7 +170,7 @@ module.exports = {
             }
 
             if (idea) {
-                models.Preference.findOne({title: idea.title, email: email})
+                models.Preference.findOne({idea: idea._id, email: email})
                 .exec(function(err, preference) {
                     if (err) {
                         console.log("Error in addPreference: " + err);
@@ -185,7 +188,7 @@ module.exports = {
                         var newPref = new models.Preference();
 
                         newPref.email = email;
-                        newPref.title = idea.title;
+                        newPref.idea = idea._id;
                         newPref.preference = p;
 
                         newPref.save(function(err) {
@@ -206,8 +209,10 @@ module.exports = {
     },
 
     /* Get the preferences for an idea */
-    getPreferences: function(title, callback) {
-        models.Preference.find({title: title}, function(err, preferences) {
+    getPreferences: function(id, callback) {
+        console.log(id);
+
+        models.Preference.find({idea: id}, function(err, preferences) {
             if (err) {
                 console.log("Error in getPreferences: " + err);
                 callback({success: false, errmsg: err});
@@ -248,11 +253,13 @@ module.exports = {
 
 
     /* Get overall preference for an idea given a title */
-    getOverall: function(title, callback) {
+    getOverall: function(id, callback) {
+        id = new mongoose.Types.ObjectId(id);
+
         models.Preference.aggregate([
-            {$match: {title: title}},
+            {$match: {idea: id}},
             {$group: {
-                _id: "$title",
+                _id: "$idea",
                 overall: {$sum: "$preference"}
             }}
         ]).exec(function(err, preference) {
@@ -261,7 +268,7 @@ module.exports = {
                 callback({success: false, errmsg: err});
                 return;
             }
-            
+
             callback({success:true, overall: preference});
         });
     }

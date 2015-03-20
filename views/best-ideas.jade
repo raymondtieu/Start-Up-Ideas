@@ -4,9 +4,9 @@ block content
     link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css")
     link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css")
     script(src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js')
-    script(src='scripts/k-best-controller.js')
+    script(src='scripts/best-ideas-controller.js')
 
-    div(ng-controller="KBestCtrl")
+    div(ng-controller="BestIdeasCtrl")
 
         label Number of ideas: 
         input(type="text", placeholder="Enter a number", required, ng-model="num")
@@ -28,6 +28,7 @@ block content
 
         button.btn.btn-primary(ng-click="findIdeas()") Find Ideas
         
+        p Showing {{ filteredIdeas.length }} results
         table.table.table-bordered
             tr
                 th Title
@@ -36,7 +37,7 @@ block content
                 th Date Posted
                 th Overall Preference
 
-            tr(ng-repeat="idea in ideas | orderBy:'preference':true | limitTo: lim")
+            tr(ng-repeat="idea in filteredIdeas = (ideas | orderBy:'preference':true | limitTo: lim)")
                 td
                     a(href='/idea={{ idea._id }}') {{ idea.title }}
                 td {{ idea.industry }}

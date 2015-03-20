@@ -86,14 +86,14 @@ function trimInput(str) {
 
 
 /* Calculate likes and dislikes given a list of preferences */
-function getPreferences(title, p, email, callback) {
+function getPreferences(id, p, email, callback) {
     var likes = 0;
     var dislikes = 0;
     var g = false;
     var msg = '';
 
     for (var i = 0; i < p.length; i++) {
-        if (p[i].title == title) {
+        if (p[i].idea == id) {
             if (p[i].email == email) {
                 g = true;
 

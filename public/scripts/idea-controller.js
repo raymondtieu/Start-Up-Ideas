@@ -28,12 +28,12 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             $http({
                 url: '/preferences',
                 method: "GET",
-                params: {title: $scope.idea.title}
+                params: {id: $scope.idea._id}
             }).success(function(result) {
                 if (result.success) {
                     // set amount of likes/dislikes for this idea
                     // determine whether this user liked/disliked this idea
-                    getPreferences($scope.idea.title, result.preferences, $scope.user.email,
+                    getPreferences($scope.idea._id, result.preferences, $scope.user.email,
                         function(result) {
                             $scope.idea.likes = result.likes;
                             $scope.idea.dislikes = result.dislikes;

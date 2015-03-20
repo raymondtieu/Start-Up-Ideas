@@ -19,8 +19,8 @@ var IdeaSchema = new Schema({
 });
 
 var PreferenceSchema = new Schema({
-    email: {type: String, required: true, trim: true},
-    title: {type: String, required: true, trim: true},
+    email: {type: String, required: true},
+    idea: {type: Schema.Types.ObjectId, ref: Idea, required: true},
     preference: {type: Number, required: true}
 });
 
