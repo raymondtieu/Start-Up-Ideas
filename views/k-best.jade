@@ -27,11 +27,22 @@ block content
         p {{errmsg}}
 
         button.btn.btn-primary(ng-click="findIdeas()") Find Ideas
+        
+        table.table.table-bordered
+            tr
+                th Title
+                th Industry
+                th Author
+                th Date Posted
+                th Overall Preference
 
-
-        h3 Ideas
-        ul(ng-repeat="i in ideas | orderBy: 'preference':true | limitTo: lim")
-            li {{ i.title }} - {{ i.posted }} - {{ i.preference }}
+            tr(ng-repeat="idea in ideas | orderBy:'preference':true | limitTo: lim")
+                td
+                    a(href='/idea={{ idea._id }}') {{ idea.title }}
+                td {{ idea.industry }}
+                td {{ idea.poster }}
+                td {{ idea.posted }}
+                td {{ idea.preference }}
 
         script
             $(function() {$('.datepicker').datepicker({ format: 'yyyy-mm-dd' }); })
