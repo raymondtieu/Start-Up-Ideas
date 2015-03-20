@@ -16,20 +16,32 @@ var dbConfig = require('./db');
 
 
 // Heroku
-var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||'mongodb://localhost/start-up-ideas';
-
-// The http server will listen to an appropriate port, or default to
-// port 5000.
-var theport = process.env.PORT || 3000;
-
-// Makes connection asynchronously.  Mongoose will queue up database
-// operations and release them when the connection is complete.
-mongoose.connect(uristring, function (err, res) {
-  if (err) {
-  console.log ('ERROR connecting to: ' + uristring + '. ' + err);
-  } else {
-  console.log ('Succeeded connected to: ' + uristring);
-  }
+var uriUtil = require('mongodb-uri');
+ 
+/* 
+ * Mongoose by default sets the auto_reconnect option to true.
+ * We recommend setting socket options at both the server and replica set level.
+ * We recommend a 30 second connection timeout because it allows for 
+ * plenty of time in most operating environments.
+ */
+var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
+                replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };       
+ 
+/*
+ * Mongoose uses a different connection string format than MongoDB's standard.
+ * Use the mongodb-uri library to help you convert from the standard format to
+ * Mongoose's format.
+ */
+var mongodbUri = 'mongodb://user:pass@host:port/db';
+var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+ 
+mongoose.connect(mongooseUri, options);
+var conn = mongoose.connection;             
+ 
+conn.on('error', console.error.bind(console, 'connection error:'));  
+ 
+conn.once('open', function() {
+  // Wait for the database connection to establish, then start the app.                         
 });
 
 
