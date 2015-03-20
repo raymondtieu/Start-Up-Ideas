@@ -115,7 +115,13 @@ function getPreferences(id, p, email, callback) {
     return;
 }
 
-/* Convert an ISO date to a more readable format */
+/* Convert an ISO date to a more readable format and for easy sorting */
 function convertDate(date) {
-    return date.substring(0,10) + " at " + date.substring(11,19);
+    var d = new Date(date);
+
+    return d.getFullYear() + "-" 
+        + ("0" + (d.getMonth() + 1)).slice(-2) + "-" 
+        + ("0" + d.getDate()).slice(-2) + " at "
+        + ("0" + d.getHours()).slice(-2) + ":" 
+        + ("0" + d.getMinutes()).slice(-2);
 }

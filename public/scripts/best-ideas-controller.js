@@ -20,7 +20,7 @@ app.controller('BestIdeasCtrl', function($scope, $http) {
             $scope.errmsg = 'Starting date must be before ending date'
         else {
             $scope.errmsg = '';
-
+            
             // get all ideas between the start and end dates
             $http({
                 url: '/get-ideas-between',
@@ -31,6 +31,8 @@ app.controller('BestIdeasCtrl', function($scope, $http) {
 
                 // for each idea, get the sum of all preferences
                 for (var i = 0; i < $scope.ideas.length; i++) {
+                    $scope.ideas[i].posted = convertDate($scope.ideas[i].posted);
+
                     (function(j) {
                         $http({
                             url: '/get-overall',
@@ -50,3 +52,4 @@ app.controller('BestIdeasCtrl', function($scope, $http) {
         }
     }
 });
+

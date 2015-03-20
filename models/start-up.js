@@ -238,7 +238,17 @@ module.exports = {
 
     /* Get ideas between the start and end dates */
     getIdeasBetween: function(k, start, end, callback) {
-        models.Idea.find({posted: {$gte: new Date(start), $lte: new Date(end)}})
+        // add 4 hours to compensate for UTC times
+        start = new Date(start);
+        start.setHours(start.getHours() + 4);
+
+        end = new Date(end);
+        end.setHours(end.getHours() + 4);
+
+        start = start.toISOString();
+        end = end.toISOString();
+
+        models.Idea.find({posted: {$gte: start, $lt: end}})
             .exec(function (err, ideas) {
                 if (err) {
                     console.log("Error in getIdeasBetween: " + err);
