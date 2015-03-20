@@ -10,7 +10,7 @@ app.controller('ListCtrl', function($scope, $modal, $http) {
     $scope.sortReverse = true;
 
     // options for which ideas to display
-    $scope.viewOptions = ['All', 'My Ideas', 'Best k Ideas', 'Graph'];
+    $scope.viewOptions = ['All', 'My Ideas', 'Best k Ideas'];
     $scope.viewOption = $scope.viewOptions[0];
     $scope.industryOptions = ['All'].concat(industries);
     $scope.industryOption = $scope.industryOptions[0];
