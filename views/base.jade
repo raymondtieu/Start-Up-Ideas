@@ -40,16 +40,25 @@ html(ng-app="startUp")
                 h3 Start-Up Idea
            
             div.modal-body
-                label Title
-                input(type="text", placeholder="Title", required, autofocus, ng-model="title")
-                br
-                p Description   
-                textarea(cols="40" rows="5", placeholder="Description", required, ng-model="description")
-                br
-                label Industry
-                select(ng-model="industry" ng-options="i for i in industries")
-                label Keywords
-                input(type="text", placeholder="Keywords", ng-model="keywords")
+                div.row.table
+                    div.table-cell.col-md-6
+                        span.h5 Title:  
+                        br
+                        input(type="text", placeholder="Title", required, autofocus, ng-model="title")
+                    div.table-cell.col-md-6
+                        span.h5 Industry: 
+                        select(ng-model="industry" ng-options="i for i in industries")
+                div.row.table
+                    div.table-cell.col-md-12
+                        span.h5 Description:  
+                        br 
+                        textarea(cols="60" rows="8", placeholder="Description", required, ng-model="description")
+                
+                div.row.table
+                    div.table-cell.col-md-12
+                        span.h5 Keywords:
+                        br
+                        input(type="text", placeholder="Keywords", ng-model="keywords")
 
             div.modal-footer
                 button.btn.btn-warning(ng-click="cancel()") Cancel
