@@ -53,13 +53,6 @@ module.exports = function(passport) {
         });
     });
 
-    /* GET all ideas by current user */
-    router.get('/my-ideas', isAuthenticated, function(req, res) {
-        startup.getIdeasByUser(req.user, function(result) {
-            res.send(result);
-        })
-    });
-
     /* Handle idea POST */
     router.post('/new-idea', function(req, res) {
         title = req.query.title;
@@ -78,7 +71,7 @@ module.exports = function(passport) {
         res.render('idea');
     });
 
-    /* GET an idea and preferences given an id  */
+    /* GET an idea given an id  */
     router.get('/idea', isAuthenticated, function(req, res) {
         var id = req.query.id;
 
@@ -88,7 +81,7 @@ module.exports = function(passport) {
     })
 
     /* Handle update idea PUT */
-    router.put('/idea=:id/update', function(req,res) {
+    router.put('/idea=:id/update', isAuthenticated, function(req,res) {
         var id = req.params.id;
 
         title = req.query.title;
@@ -155,10 +148,12 @@ module.exports = function(passport) {
         res.send({user: req.user});
     });
 
+
     router.get('/best-ideas', isAuthenticated, function(req, res) {
         res.render('best-ideas');
     });
 
+    /* GET all ideas between the start and end date */
     router.get('/get-ideas-between', isAuthenticated, function(req, res) {
         var k = req.query.k;
         var start = req.query.start;
@@ -169,9 +164,10 @@ module.exports = function(passport) {
         });
     });
 
+    /* GET the overall preference for an idea given an id */
     router.get('/get-overall', isAuthenticated, function(req, res) {
         var id = req.query.id;
-        
+
         startup.getOverall(id, function(result) {
             res.send(result);
         });
