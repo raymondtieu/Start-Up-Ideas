@@ -9,6 +9,9 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
     $scope.viewOptions = ['All', 'My Ideas', 'Best k Ideas', 'Graph'];
     $scope.viewOption = $scope.viewOptions[0];
 
+    $scope.industryOptions = ['All'].concat(industries);
+    $scope.industryOption = $scope.industryOptions[0];
+
     // get current user
     getUser($http, function(result) {
         $scope.user = result;

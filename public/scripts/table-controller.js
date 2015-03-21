@@ -5,9 +5,6 @@ app.controller('TableCtrl', function($scope) {
     $scope.orderByField = 'posted';
     $scope.sortReverse = true;
 
-    $scope.industryOptions = ['All'].concat(industries);
-    $scope.industryOption = $scope.industryOptions[0];
-
     // handle sorting of ideas by different values when clicked
     $scope.changeSort = function(value) {
         if (value == $scope.orderByField)
@@ -25,10 +22,13 @@ app.controller('TableCtrl', function($scope) {
     $scope.myFilter = function(idea) {
         var filter = false;
         var industry = false;
-        var keyword = false;
+        var keyword = false; 
 
         var view = $scope.$parent.viewOption;
         var options = $scope.$parent.viewOptions;
+
+        var industryOptions = $scope.$parent.industryOptions;
+        var industryOption = $scope.$parent.industryOption;
 
         // display all ideas
         if (view == options[0])
@@ -41,15 +41,15 @@ app.controller('TableCtrl', function($scope) {
             filter = true;
 
         // decide which ideas to display given an industry
-        if ($scope.industryOption == $scope.industryOptions[0])
+        if (industryOption == industryOptions[0])
             industry = true;
         else
-            industry = idea.industry == $scope.industryOption;
+            industry = idea.industry == industryOption;
 
         // decide which ideas to display given keywords
-        keywordRegex = new RegExp($scope.keywordSearch, "i");
+        keywordRegex = new RegExp($scope.$parent.keywordSearch, "i");
 
-        if (!$scope.keywordSearch)
+        if (!$scope.$parent.keywordSearch)
             keyword = true;
         else if (idea.keywords.match(keywordRegex)) {
             keyword = true;

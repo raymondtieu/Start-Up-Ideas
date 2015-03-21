@@ -8,35 +8,34 @@ block content
     script(src='scripts/table-controller.js')
     script(src='scripts/graph-controller.js')
 
-    div(ng-controller="HomeCtrl")
+    div.col-md-8.center(ng-controller="HomeCtrl")
         h4 Name: {{ user.name }}
         h4 Email: {{ user.email }}
         h4 password: {{ user.password }}
 
-        h4 All Ideas
-
         a(href='/best-ideas') See best ideas
-        br
-            
-        label Select Ideas to View: 
-        select(ng-model="viewOption", ng-options="i for i in viewOptions", ng-change="showGraph()")
-        br
-        button.btn.btn-primary(ng-click="open()") Propose a new idea
-        br
 
-        div(ng-controller="TableCtrl" ng-show="viewOption!='Graph'")   
-            label Filter by Industry: 
-            select(ng-model="industryOption", ng-options="i for i in industryOptions")
+        div.row
+            div.table
+                div.table-cell.col-md-6
+                    button.btn.btn-primary(ng-click="open()") Propose New Idea
+                    br
+                    br
+                    span.h5 Select Ideas To View:  
+                    select(ng-model="viewOption", ng-options="i for i in viewOptions", ng-change="showGraph()")
 
-            br
+                div.table-cell.col-md-6(ng-show="viewOption!='Graph'")
+                    br
+                    span.h5 View by Industry:  
+                    select(ng-model="industryOption", ng-options="i for i in industryOptions")
+                    br
+                    br
+                    span.h5 Search by Keyword:  
+                    input(ng-model="keywordSearch")
 
-            label Search by keyword: 
-            input(ng-model="keywordSearch")
+        hr
 
-            p Ordered by : {{ orderByField }}
-            p Reversed : {{ sortReverse }}
-
-            br
+        div.row(ng-controller="TableCtrl" ng-show="viewOption!='Graph'") 
             p Showing {{ filteredIdeas.length }} results
             table.table.table-bordered
                 tr
