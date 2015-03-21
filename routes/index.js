@@ -43,7 +43,7 @@ module.exports = function(passport) {
 
     /* GET home page */
     router.get('/home', isAuthenticated, function(req, res) {
-        res.render('home');
+        res.render('home', {user: req.user});
     });
 
     /* GET all ideas in database */
@@ -68,7 +68,7 @@ module.exports = function(passport) {
 
     /* GET the page for an idea */
     router.get('/idea=:id', isAuthenticated, function(req, res) {
-        res.render('idea');
+        res.render('idea', {user: req.user});
     });
 
     /* GET an idea given an id  */
@@ -148,10 +148,6 @@ module.exports = function(passport) {
         res.send({user: req.user});
     });
 
-
-    router.get('/best-ideas', isAuthenticated, function(req, res) {
-        res.render('best-ideas');
-    });
 
     /* GET all ideas between the start and end date */
     router.get('/get-ideas-between', isAuthenticated, function(req, res) {

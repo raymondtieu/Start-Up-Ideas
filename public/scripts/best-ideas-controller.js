@@ -1,10 +1,11 @@
-var app = angular.module('startUp', []);
+var app = angular.module('startUp');
 
 app.controller('BestIdeasCtrl', function($scope, $http) {
     $scope.errmsg = '';
     $scope.lim = 0;
 
     $scope.ideas = [];
+    $scope.found = false;
 
     $scope.findIdeas = function() {
         var k = parseInt($scope.num, 10);
@@ -13,9 +14,9 @@ app.controller('BestIdeasCtrl', function($scope, $http) {
         if (!$scope.num || !$scope.startdate || !$scope.enddate)
             $scope.errmsg = 'Fill out all fields';
         else if (!k && k != 0)
-            $scope.errmsg = 'k must be a number'
+            $scope.errmsg = 'Number of top ideas must be a number'
         else if (k <= 0)
-            $scope.errmsg = 'k must be greater than 0'
+            $scope.errmsg = 'Number of top ideas must be greater than 0'
         else if ($scope.enddate <= $scope.startdate)
             $scope.errmsg = 'Starting date must be before ending date'
         else {
@@ -28,6 +29,7 @@ app.controller('BestIdeasCtrl', function($scope, $http) {
                 params: {k: k, start: $scope.startdate, end: $scope.enddate}
             }).success(function(result) {
                 $scope.ideas = result.ideas;
+                $scope.found = true;
 
                 // for each idea, get the sum of all preferences
                 for (var i = 0; i < $scope.ideas.length; i++) {

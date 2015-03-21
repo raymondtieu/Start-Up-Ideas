@@ -1,4 +1,4 @@
-var app = angular.module('startUp', ['ui.bootstrap', 'chart.js']);
+var app = angular.module('startUp');
 
 /* Controller for the home page */
 app.controller('HomeCtrl', function($scope, $modal, $http) {
@@ -6,7 +6,7 @@ app.controller('HomeCtrl', function($scope, $modal, $http) {
     $scope.user = null;
 
     // options for which ideas to display
-    $scope.viewOptions = ['All', 'My Ideas', 'Best k Ideas', 'Graph'];
+    $scope.viewOptions = ['All', 'My Ideas', 'Best Ideas', 'Graph'];
     $scope.viewOption = $scope.viewOptions[0];
 
     $scope.industryOptions = ['All'].concat(industries);

@@ -1,30 +1,22 @@
 extends base
 
 block content
-    script(src='scripts/Chart.min.js')
-    script(src='scripts/angular-chart.js')
-
     script(src='scripts/home-controller.js')
     script(src='scripts/table-controller.js')
     script(src='scripts/graph-controller.js')
+    script(src='scripts/best-ideas-controller.js')
 
     div.col-md-8.center(ng-controller="HomeCtrl")
-        h4 Name: {{ user.name }}
-        h4 Email: {{ user.email }}
-        h4 password: {{ user.password }}
-
-        a(href='/best-ideas') See best ideas
-
         div.row
             div.table
                 div.table-cell.col-md-6
-                    button.btn.btn-primary(ng-click="open()") Propose New Idea
-                    br
-                    br
                     span.h5 Select Ideas To View:  
                     select(ng-model="viewOption", ng-options="i for i in viewOptions", ng-change="showGraph()")
+                    br
+                    br
+                    button.btn.btn-primary(ng-click="open()") Propose New Idea
 
-                div.table-cell.col-md-6(ng-show="viewOption!='Graph'")
+                div.table-cell.col-md-6(ng-show="viewOption!='Graph' && viewOption!='Best Ideas'")
                     br
                     span.h5 View by Industry:  
                     select(ng-model="industryOption", ng-options="i for i in industryOptions")
@@ -35,7 +27,7 @@ block content
 
         hr
 
-        div.row(ng-controller="TableCtrl" ng-show="viewOption!='Graph'") 
+        div.row(ng-controller="TableCtrl" ng-show="viewOption!='Graph' && viewOption!='Best Ideas'") 
             p Showing {{ filteredIdeas.length }} results
             table.table.table-bordered
                 tr
@@ -65,6 +57,58 @@ block content
             h2 Distribution of Ideas by Industry
             canvas(id="bar" class="chart chart-bar" data="data" labels="labels")
 
-    p
-        a(href='/signout') Sign Out
+        div.row(ng-controller="BestIdeasCtrl" ng-show="viewOption=='Best Ideas'")
+            link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css")
+            link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css")
+            script(src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js')
+
+            div.row.table
+                div.table-cell.col-md-3
+                    span.h6 Number of Top Ideas: 
+                    br
+                    input(type="text", placeholder="Enter a number", required, ng-model="num")
+                
+                div.table-cell.col-md-3
+                    span.h6 Starting Date
+                    div.datepicker.input-group.input-append.date
+                        input.form-control(name="date" type="text" ng-model="startdate")
+                        span.input-group-addon.add-on.glyphicon.glyphicon-calendar
+
+                div.table-cell.col-md-3
+                    span.h6 Ending Date
+                    div.datepicker.input-group.input-append.date
+                        input.form-control(name="date" type="text" ng-model="enddate")
+                        span.input-group-addon.add-on.glyphicon.glyphicon-calendar
+
+                div.table-cell.col-md-3
+                    button.btn.btn-primary(ng-click="findIdeas()") Find Ideas
+
+            div.row
+                span.h5 {{ errmsg }}
+
+            
+            div.row(ng-show="found && ideas.length > 0")
+                p Showing {{ filteredIdeas.length }} results
+                table.table.table-bordered
+                    tr
+                        th Title
+                        th Industry
+                        th Author
+                        th Date Posted
+                        th Overall Preference
+
+                    tr(ng-repeat="idea in filteredIdeas = (ideas | orderBy:'preference':true | limitTo: lim)")
+                        td
+                            a(href='/idea={{ idea._id }}') {{ idea.title }}
+                        td {{ idea.industry }}
+                        td {{ idea.poster }}
+                        td {{ idea.posted }}
+                        td {{ idea.preference }}
+            div.row(ng-show="found && ideas.length==0")
+                span.h5 No ideas were found between {{ startdate }} and {{ enddate }}
+
+            script
+                $(function() {$('.datepicker').datepicker({ format: 'yyyy-mm-dd' }); })
+
+
         

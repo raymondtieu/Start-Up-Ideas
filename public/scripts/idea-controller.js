@@ -1,4 +1,4 @@
-var app = angular.module('startUp', ['ui.bootstrap']);
+var app = angular.module('startUp');
 
 /* Controller for a single idea */
 app.controller('IdeaCtrl', function($scope, $modal, $http) {
