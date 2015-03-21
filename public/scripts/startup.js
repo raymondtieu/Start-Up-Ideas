@@ -16,6 +16,7 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
             $scope.title = idea.title;
             $scope.description = idea.description;
             $scope.industry = idea.industry;
+            $scope.keywords = idea.keywords;
 
             $scope.submit = function() {
 

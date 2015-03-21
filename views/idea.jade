@@ -3,28 +3,45 @@ extends layout
 block content
     script(src="scripts/idea-controller.js")
 
-    div(ng-controller="IdeaCtrl")
-        h4 {{ idea.title }}
-        p {{ idea.poster }} - {{ idea.email }}
-        br
-        p(style="white-space: pre-wrap") {{ idea.description }}
-        br
-        p {{ idea.industry }}
-        p {{ idea.keywords }}
-        p {{ idea.posted }}
-        p Likes: {{ idea.likes }} Dislikes: {{ idea.dislikes }}
-        p Overall: {{ idea.likes - idea.dislikes }}
-    
-        button.btn.btn-primary(ng-click="open()" ng-show="user.email==idea.email") Update Idea
-        button.btn.btn-primary(ng-click="delete()" ng-show="user.email==idea.email") Delete Idea
+    div.col-md-8.center(ng-controller="IdeaCtrl")
+        div.row
+            h1 {{ idea.title }}
+            p.lead posted by {{ idea.poster }} ({{ idea.email }}) on {{ idea.posted }}
+            p.lead Industry: {{ idea.industry }}
+        hr
 
-        div(ng-show="user.email != idea.email")
-            button.btn.btn-primary(ng-click="like()" ng-show="!gave_preference") Like
-            button.btn.btn-primary(ng-click="dislike()" ng-show="!gave_preference") Dislike
+        div.row
+            div.table
+                div.table-cell.col-md-8
+                    h3 About this Start-Up Idea
+                    p(style="white-space: pre-wrap") {{ idea.description }}
 
-            p(ng-show="gave_preference") {{ pref_msg }}
+                div.table-cell.col-md-4
+                    div.num.h1.bold {{ idea.likes - idea.dislikes }}
+                    span.bold.h5 overall rating
 
-        p
-            a(href='/signout') Sign Out
+                    div.num.h2.bold {{ idea.likes }}
+                    span.bold.h5 number of likes
 
-        
+                    div.num.h2.bold {{ idea.dislikes }}
+                    span.bold.h5 number of dislikes
+
+                    div.inline-block(ng-show="user.email==idea.email")
+                        button.btn.btn-primary(ng-click="open()") Update Details
+                        br
+                        button.btn.btn-primary(ng-click="delete()") Delete 
+
+                    div.inline-block(ng-show="user.email!=idea.email && !gave_preference")
+                        button.btn.btn-primary(ng-click="like()") Like
+                        br
+                        button.btn.btn-primary(ng-click="dislike()") Dislike
+
+                    div.inline-block(ng-show="gave_preference")
+                        br
+                        span.h6 {{ pref_msg }}
+        hr
+
+        div.row
+            span.h5 Keywords: {{ idea.keywords }}
+
+ 

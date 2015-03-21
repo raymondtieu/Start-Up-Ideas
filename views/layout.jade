@@ -10,7 +10,8 @@ html(ng-app="startUp")
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
     script(src='scripts/startup.js')
   body
-    block content
+    div.contents.container-fluid
+        block content
 
     <!-- Modal to enter details about an idea -->
     script(type="text/ng-template" id="idea-modal.jade")
