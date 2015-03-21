@@ -28,11 +28,15 @@ function openModal($scope, $modal, $http, url, idea, method, callback) {
                 if ($scope.keywords)
                     $keywords = trimInput($scope.keywords);
 
-                if (!($title.match(titleRegex))) {
-                    $scope.errmsg = "Invalid title. 5-30 letter characters only.";
-                } else if (!$scope.title || !$scope.description || !$scope.industry) {
-                    $scope.errmsg = "Please fill out all fields";
-                } else {
+                if (!($title.match(titleRegex)))
+                    $scope.errmsg = "A title must be 5-30 letter characters";
+                else if (!$scope.title)
+                    $scope.errmsg = "Please enter a title";
+                else if (!$scope.description)
+                    $scope.errmsg = "Please enter a description";
+                else if (!$scope.industry)
+                    $scope.errmsg = "Please enter a industry";
+                else {
                     // send HTTP request if form passes server side validation
                     $http({
                         url: url,

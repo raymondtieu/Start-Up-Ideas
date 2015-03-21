@@ -59,9 +59,10 @@ html(ng-app="startUp")
                         span.h5 Keywords:
                         br
                         input(type="text", placeholder="Keywords", ng-model="keywords")
+                div.row
+                    span.h5 {{ errmsg }}
 
             div.modal-footer
                 button.btn.btn-warning(ng-click="cancel()") Cancel
                 button.btn.btn-primary(ng-click="submit()") Submit
 
-            p {{ errmsg }}
