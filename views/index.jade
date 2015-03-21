@@ -1,21 +1,20 @@
 extends layout
 
 block content
-    h1 Login
-
-    form(action="/login", method="POST")
-        div
-            p Email
-            input(type="text" name="username" placeholder="Email", required, autofocus)
-        div
-            p Password
-            input(type="password" name="password" placeholder="Password", required)
-        div
-            input(type="submit" value="Submit")
+    div.col-md-4.center
+        form.form-signin(action="/login", method="POST")
+            center
+                h2.form-signin-heading.center Log In
+            input.form-control(type="email" name="username" placeholder="Email address", required, autofocus)
+            input.form-control(type="password" name="password" placeholder="Password", required)
+            br
+            button.btn-primary.btn-lg.btn-block(type="submit") Log In
 
         div
-            a(href='/signup', class='text-center new-account') Create an account
+            center
+                a(href='/signup', class='text-center new-account') Create an account
 
-        #message
-        if message
-            p #{message}
+        div.row
+            if message
+                center 
+                    span.h4 #{message}
