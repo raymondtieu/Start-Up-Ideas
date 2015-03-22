@@ -29,9 +29,7 @@ block content
                     div.inline-block(ng-show="user.email==idea.email")
                         button.btn.btn-primary(ng-click="open()") Update Details
                         br
-                        //button.btn.btn-primary(ng-bootbox-alert="Alert") Delete
                         button.btn.btn-primary(ng-bootbox-confirm="Are you sure you want to delete this idea?", ng-bootbox-confirm-action="delete()") Delete
-                        //button.btn.btn-primary(ng-click="delete()") Delete 
 
                     div.inline-block(ng-show="user.email!=idea.email && !gave_preference")
                         button.btn.btn-primary(ng-click="like()") Like
