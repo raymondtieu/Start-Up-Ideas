@@ -1,4 +1,4 @@
-var app = angular.module('startUp', ['ui.bootstrap', 'chart.js']);
+var app = angular.module('startUp', ['ui.bootstrap', 'chart.js', 'ngBootbox']);
 
 /* Functions used across multiple controllers */
 
