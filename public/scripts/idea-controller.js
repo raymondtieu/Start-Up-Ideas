@@ -76,7 +76,6 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             $scope.gave_preference = true;
             $scope.pref_msg = "You liked this idea"
 
-            /* temporary */
             $scope.idea.likes += 1;
         })
     }
@@ -90,7 +89,6 @@ app.controller('IdeaCtrl', function($scope, $modal, $http) {
             $scope.gave_preference = true;
             $scope.pref_msg = "You disliked this idea"
 
-            /* temporary */
             $scope.idea.dislikes += 1;
         })
     }
