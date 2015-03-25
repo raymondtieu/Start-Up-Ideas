@@ -1,5 +1,5 @@
-Individual project for CSC309 done with Node js
+Individual project for CSC309 using Node js
 
-demo: https://start-up309.herokuapp.com
+Demo: https://start-up309.herokuapp.com
 
-Install dependencies in package.json and create a database using mongodb with the name 'start-up-ideas'
+Install dependencies in package.json and create a database using mongodb and modify 'db.js' accordingly as well as the connect statements in 'app.js'
