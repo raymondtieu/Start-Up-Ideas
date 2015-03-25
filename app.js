@@ -36,13 +36,6 @@ var mongodbUri = 'mongodb://user:pass@host:port/db';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 
 //mongoose.connect(process.env.MONGOLAB_URI || mongodbUri);
-//var conn = mongoose.connection;             
- 
-//conn.on('error', console.error.bind(console, 'connection error:'));  
- 
-//conn.once('open', function() {
-  // Wait for the database connection to establish, then start the app.                         
-//});
 
 /**************/
 
