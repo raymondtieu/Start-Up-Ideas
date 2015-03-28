@@ -17,7 +17,7 @@ app.controller('BestIdeasCtrl', function($scope, $http) {
             $scope.errmsg = 'Number of top ideas must be a number'
         else if (k <= 0)
             $scope.errmsg = 'Number of top ideas must be greater than 0'
-        else if ($scope.enddate <= $scope.startdate)
+        else if ($scope.enddate < $scope.startdate)
             $scope.errmsg = 'Starting date must be before ending date'
         else {
             $scope.errmsg = '';

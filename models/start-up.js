@@ -242,11 +242,14 @@ module.exports = {
         start = new Date(start);
         start.setHours(start.getHours() + 4);
 
+        // set the ending date to the end of that day
         end = new Date(end);
-        end.setHours(end.getHours() + 4);
+        end.setHours(end.getHours() + 27);
+        end.setMinutes(59);
+        end.setSeconds(59);
 
         start = start.toISOString();
-        end = end.toISOString();
+        end = end.toISOString();        
 
         models.Idea.find({posted: {$gte: start, $lt: end}})
             .exec(function (err, ideas) {
