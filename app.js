@@ -12,7 +12,7 @@ var dbConfig = require('./db');
 
 // development
 // connect to db
-//mongoose.connect(dbConfig.url);
+mongoose.connect(dbConfig.url);
 
 
 /* Production */
@@ -22,7 +22,7 @@ var uriUtil = require('mongodb-uri');
 var mongodbUri = 'mongodb://user:pass@host:port/db';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 
-mongoose.connect(process.env.MONGOLAB_URI || mongodbUri);
+//mongoose.connect(process.env.MONGOLAB_URI || mongodbUri);
 
 /**************/
 
