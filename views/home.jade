@@ -1,10 +1,10 @@
 extends base
 
 block content
-    script(src='scripts/home-controller.js')
-    script(src='scripts/table-controller.js')
-    script(src='scripts/graph-controller.js')
-    script(src='scripts/best-ideas-controller.js')
+    script(src='scripts/controllers/home-controller.js')
+    script(src='scripts/controllers/table-controller.js')
+    script(src='scripts/controllers/graph-controller.js')
+    script(src='scripts/controllers/best-ideas-controller.js')
 
     div.col-md-8.center(ng-controller="HomeCtrl")
         div.row
@@ -69,13 +69,13 @@ block content
                     input(type="text", placeholder="Enter a number", required, ng-model="num")
                 
                 div.table-cell.col-md-3
-                    span.h6 Starting Date
+                    span.h6 Starting Date (12:00:00 AM)
                     div.datepicker.input-group.input-append.date
                         input.form-control(name="date" type="text" ng-model="startdate")
                         span.input-group-addon.add-on.glyphicon.glyphicon-calendar
 
                 div.table-cell.col-md-3
-                    span.h6 Ending Date
+                    span.h6 Ending Date (11:59:59 PM)
                     div.datepicker.input-group.input-append.date
                         input.form-control(name="date" type="text" ng-model="enddate")
                         span.input-group-addon.add-on.glyphicon.glyphicon-calendar

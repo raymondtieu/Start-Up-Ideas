@@ -17,8 +17,6 @@ mongoose.connect(dbConfig.url);
 
 /* Production */
 var uriUtil = require('mongodb-uri');
- 
-
 var mongodbUri = 'mongodb://user:pass@host:port/db';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 
